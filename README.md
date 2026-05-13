@@ -11,7 +11,7 @@ Satellite code simulation and STM32 implementation of that code
 The following tutorials might help for STM32 coding. It might be a good idea to spend some time to actually learnt his since **STM32 is a complicated yet powerful platform**:
 
 ### STM32 basics
-<video src='https://www.youtube.com/watch?v=zCfj357c9LI&list=PLnMKNibPkDnFlFe2NTzTLsh4Acoh-cvYR' width=180/>
+[![STM32 basics](https://img.youtube.com/vi/zCfj357c9LI/0.jpg)](https://www.youtube.com/watch?v=zCfj357c9LI&list=PLnMKNibPkDnFlFe2NTzTLsh4Acoh-cvYR)
 
 ### Learn how to use HAL and functionality
-<video src='https://www.youtube.com/watch?v=dnfuNT1dPiM' width=180/>
+[![Learn HAL](https://img.youtube.com/vi/dnfuNT1dPiM/0.jpg)](https://www.youtube.com/watch?v=dnfuNT1dPiM)
