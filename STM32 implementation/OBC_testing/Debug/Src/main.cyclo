@@ -1,0 +1,8 @@
+../Src/main.c:71:13:flash_load	1
+../Src/main.c:77:26:flash_save	2
+../Src/main.c:105:13:blink_count	2
+../Src/main.c:121:5:main	4
+../Src/main.c:194:6:SystemClock_Config	4
+../Src/main.c:246:13:MX_IWDG1_Init	2
+../Src/main.c:275:13:MX_GPIO_Init	1
+../Src/main.c:319:6:Error_Handler	1
