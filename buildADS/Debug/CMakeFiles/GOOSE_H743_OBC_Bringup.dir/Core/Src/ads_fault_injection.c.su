@@ -1,0 +1,5 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fault_injection.c:19:6:ADS_FaultInjection_Init	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fault_injection.c:24:6:ADS_FaultInjection_SetMode	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fault_injection.c:34:24:ADS_FaultInjection_GetMode	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fault_injection.c:39:6:ADS_FaultInjection_IsActive	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fault_injection.c:48:6:ADS_FaultInjection_Apply	16	static

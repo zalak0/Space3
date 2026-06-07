@@ -1,0 +1,94 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Active Test",
+      "type": "shell",
+      "command": "C:/msys64/ucrt64/bin/gcc.exe",
+      "args": [
+        "-Wall",
+        "-Wextra",
+        "-g",
+
+        "-I${workspaceFolder}/STM32_dev/Common",
+        "-I${workspaceFolder}/STM32_dev/Charger_Code",
+        "-I${workspaceFolder}/STM32_dev/BMS_code",
+
+        "${file}",
+
+        "${workspaceFolder}/STM32_dev/BMS_code/bq76920_config.c",
+        "${workspaceFolder}/STM32_dev/Charger_Code/bq25798.c",
+        "${workspaceFolder}/STM32_dev/Charger_Code/charger_manager.c",
+        "${workspaceFolder}/STM32_dev/Common/fake_hal_i2c.c",
+
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build BQ76920 Config Test",
+      "type": "shell",
+      "command": "C:/msys64/ucrt64/bin/gcc.exe",
+      "args": [
+        "-Wall",
+        "-Wextra",
+        "-g",
+
+        "-I${workspaceFolder}/STM32_dev/Common",
+        "-I${workspaceFolder}/STM32_dev/BMS_code",
+
+        "${workspaceFolder}/STM32_dev/BMS_code/test_bq76920_config.c",
+        "${workspaceFolder}/STM32_dev/BMS_code/bq76920_config.c",
+        "${workspaceFolder}/STM32_dev/Common/fake_hal_i2c.c",
+
+        "-o",
+        "${workspaceFolder}/STM32_dev/BMS_code/test_bq76920_config.exe"
+      ],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run BQ76920 Config Test",
+      "type": "shell",
+      "command": "${workspaceFolder}/STM32_dev/BMS_code/test_bq76920_config.exe",
+      "dependsOn": "Build BQ76920 Config Test",
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build BQ25798 Test",
+      "type": "shell",
+      "command": "C:/msys64/ucrt64/bin/gcc.exe",
+      "args": [
+        "-Wall",
+        "-Wextra",
+        "-g",
+
+        "-I${workspaceFolder}/STM32_dev/Common",
+        "-I${workspaceFolder}/STM32_dev/Charger_Code",
+
+        "${workspaceFolder}/STM32_dev/Charger_Code/test_bq25798.c",
+        "${workspaceFolder}/STM32_dev/Charger_Code/bq25798.c",
+        "${workspaceFolder}/STM32_dev/Common/fake_hal_i2c.c",
+
+        "-o",
+        "${workspaceFolder}/STM32_dev/Charger_Code/test_bq25798.exe"
+      ],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run BQ25798 Test",
+      "type": "shell",
+      "command": "${workspaceFolder}/STM32_dev/Charger_Code/test_bq25798.exe",
+      "dependsOn": "Build BQ25798 Test",
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ]
+}

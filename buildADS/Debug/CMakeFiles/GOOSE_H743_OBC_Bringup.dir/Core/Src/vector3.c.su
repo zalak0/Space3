@@ -1,0 +1,7 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:4:9:Vector3_Add	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:15:9:Vector3_Sub	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:26:9:Vector3_Scale	64	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:37:7:Vector3_Dot	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:42:9:Vector3_Cross	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:53:7:Vector3_Norm	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/vector3.c:58:9:Vector3_Normalize	72	static

@@ -1,0 +1,12 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:6:13:ADCS_UpdatePredictedSunVector	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:20:13:ADCS_UpdatePredictedMagVector	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:30:13:ADCS_UpdateSunResidual	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:46:13:ADCS_UpdateMagResidual	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:62:13:ADCS_ApplyVectorCorrection	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:86:6:ADCS_Init	160	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:159:6:ADCS_SetSensorInputs	56	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:186:6:ADCS_SetInertialReferences	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:195:6:ADCS_SetDt	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:203:6:ADCS_Update	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:234:19:ADCS_GetState	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/adcs.c:240:16:ADCS_GetTelemetry	152	static

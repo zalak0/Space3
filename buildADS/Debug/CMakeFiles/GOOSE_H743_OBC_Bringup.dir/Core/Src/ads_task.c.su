@@ -1,0 +1,14 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:22:24:ADS_Task_DetermineFaultReason	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:58:6:ADS_Task_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:83:6:ADS_Task_Run100Hz	368	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:142:10:ADS_Task_GetLoopCount	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:147:6:ADS_Task_IsHealthy	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:152:6:ADS_Task_IsInitialized	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:157:6:ADS_Task_IsSensorBackendInitialized	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:162:12:ADS_Task_GetOutput	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:167:12:ADS_Task_GetStatus	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:172:24:ADS_Task_GetRuntimeCheck	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:177:18:ADS_Task_GetTimingStatus	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:182:28:ADS_Task_GetSensorValidation	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:187:23:ADS_Task_GetConfigCheck	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_task.c:192:27:ADS_Task_GetSensorInterfaceStatus	16	static

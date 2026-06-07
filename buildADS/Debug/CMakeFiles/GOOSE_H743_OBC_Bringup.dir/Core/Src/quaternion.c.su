@@ -1,0 +1,8 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:4:12:Quaternion_Identity	56	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:10:12:Quaternion_Normalize	88	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:34:12:Quaternion_Conjugate	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:46:12:Quaternion_Multiply	88	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:58:9:Quaternion_RotateVector	160	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:83:12:Quaternion_FromSmallAngle	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:95:12:Quaternion_PropagateGyro	120	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/quaternion.c:121:13:Quaternion_ToEuler321	88	static

@@ -1,0 +1,3 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/system_stm32h7xx.c:178:6:SystemInit	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/system_stm32h7xx.c:352:6:SystemCoreClockUpdate	48	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/system_stm32h7xx.c:474:6:ExitRun0Mode	0	static

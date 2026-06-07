@@ -1,0 +1,5 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/stm32h7xx_hal_msp.c:62:6:HAL_MspInit	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/stm32h7xx_hal_msp.c:84:6:HAL_I2C_MspInit	240	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/stm32h7xx_hal_msp.c:131:6:HAL_I2C_MspDeInit	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/stm32h7xx_hal_msp.c:162:6:HAL_UART_MspInit	248	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/stm32h7xx_hal_msp.c:249:6:HAL_UART_MspDeInit	16	static

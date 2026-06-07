@@ -1,0 +1,3 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_core.c:21:13:ADS_Core_TestStep	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_core.c:33:6:ADS_Core_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_core.c:40:16:ADS_Core_UpdateFromSensorPacket	80	static

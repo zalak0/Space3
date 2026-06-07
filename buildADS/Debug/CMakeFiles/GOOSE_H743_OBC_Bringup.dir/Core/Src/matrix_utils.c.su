@@ -1,0 +1,9 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:3:9:Matrix3_Zero	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:18:9:Matrix3_Identity	64	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:29:9:Matrix3_Add	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:44:9:Matrix3_Sub	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:59:9:Matrix3_Scale	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:74:9:Matrix3_MultiplyVector	64	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:85:9:Matrix3_Multiply	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:103:9:Matrix3_Transpose	72	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/matrix_utils.c:118:9:Matrix3_Skew	72	static

@@ -1,0 +1,6 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:22:16:ADS_SensorPacket_MakeZeroVector	48	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:33:18:ADS_SensorPacket_MakeInvalid	80	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:53:6:ADS_SensorInterface_Init	80	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:74:18:ADS_SensorInterface_UpdateAndRead	136	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:98:27:ADS_SensorInterface_GetStatus	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_interface.c:102:13:ADS_SensorSource_Name	16	static

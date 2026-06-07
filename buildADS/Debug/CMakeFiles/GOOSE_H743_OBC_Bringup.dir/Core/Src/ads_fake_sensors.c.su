@@ -1,0 +1,10 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:26:16:make_vector3	64	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:35:13:ADS_FakeSensors_SetAllValid	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:42:6:ADS_FakeSensors_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:69:6:ADS_FakeSensors_Update	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:101:9:ADS_FakeSensors_GetGyroRadS	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:106:9:ADS_FakeSensors_GetSunBody	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:111:9:ADS_FakeSensors_GetMagBody	40	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:116:19:ADS_FakeSensors_GetStatus	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:121:10:ADS_FakeSensors_GetUpdateCount	4	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_fake_sensors.c:126:7:ADS_FakeSensors_GetSimTime	4	static

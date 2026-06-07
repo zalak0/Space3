@@ -1,0 +1,4 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_debug.c:7:6:ADS_Debug_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_debug.c:12:6:ADS_Debug_UpdateFakeSensorInfo	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_debug.c:23:6:ADS_Debug_UpdateTelemetry	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_debug.c:29:19:ADS_Debug_GetSnapshot	16	static

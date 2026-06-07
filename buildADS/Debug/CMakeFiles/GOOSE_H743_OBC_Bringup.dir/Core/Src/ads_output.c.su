@@ -1,0 +1,6 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:9:13:ADS_Output_IsFiniteFloat	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:14:13:ADS_Output_QuaternionLooksValid	32	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:28:6:ADS_Output_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:40:6:ADS_Output_UpdateFromTelemetry	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:73:12:ADS_Output_GetLatest	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_output.c:78:6:ADS_Output_IsValid	4	static

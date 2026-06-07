@@ -1,0 +1,8 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:22:13:ADS_SensorValidate_IsFiniteFloat	16	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:27:16:ADS_SensorValidate_ZeroVector	48	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:36:13:ADS_SensorValidate_VectorFinite	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:43:13:ADS_SensorValidate_GyroMagnitudeSensible	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:50:14:ADS_SensorValidate_VectorNorm	24	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:55:6:ADS_SensorValidate_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:60:28:ADS_SensorValidate_Apply	48	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_validate.c:173:28:ADS_SensorValidate_GetLastResult	16	static

@@ -1,0 +1,2 @@
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_backend_fake.c:11:6:ADS_SensorBackend_Init	8	static
+C:/Users/sbush/Desktop/AERO4701_Space3/GOOSE_H743_OBC_Bringup/Core/Src/ads_sensor_backend_fake.c:17:18:ADS_SensorBackend_UpdateAndRead	80	static
