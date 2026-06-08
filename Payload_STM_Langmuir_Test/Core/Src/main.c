@@ -96,7 +96,8 @@ static void MX_I2C1_Init(void);
   */
 
 float voltage = 0.0f;
-
+HAL_StatusTypeDef i2c_status;
+uint32_t i2c_error;
 
 int main(void)
 {
@@ -138,6 +139,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+	    uint8_t buf[2] = {0};
+	    i2c_status = HAL_I2C_Master_Receive(&hi2c1, MCP3021_ADDR, buf, 2, HAL_MAX_DELAY);
+	    i2c_error  = HAL_I2C_GetError(&hi2c1);
+
 	    voltage = MCP3021_ReadVoltage(&hi2c1);
 
 	    if (voltage >= 0)
