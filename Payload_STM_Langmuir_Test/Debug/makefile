@@ -60,8 +60,8 @@ all: main-build
 main-build: Payload_STM_Langmuir_Test.elf secondary-outputs
 
 # Tool invocations
-Payload_STM_Langmuir_Test.elf Payload_STM_Langmuir_Test.map: $(OBJS) $(USER_OBJS) C:\Users\getsc\OneDrive\ -\ The\ University\ of\ Sydney\ (Students)\space\Zahi\ Al-Aker's\ files\ -\ Space\ 3\ gang\Payload\Payload_STM_Langmuir_Test\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Payload_STM_Langmuir_Test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\getsc\OneDrive - The University of Sydney (Students)\space\Zahi Al-Aker's files - Space 3 gang\Payload\Payload_STM_Langmuir_Test\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Payload_STM_Langmuir_Test.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Payload_STM_Langmuir_Test.elf Payload_STM_Langmuir_Test.map: $(OBJS) $(USER_OBJS) C:\Users\zalak\Desktop\GitHub_Repos\Space3\Payload_STM_Langmuir_Test\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Payload_STM_Langmuir_Test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\zalak\Desktop\GitHub_Repos\Space3\Payload_STM_Langmuir_Test\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Payload_STM_Langmuir_Test.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
