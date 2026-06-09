@@ -24,6 +24,7 @@
 
 /* USER CODE END Includes */
 #define MCP3021_ADDR  (0x4D << 1)  // 7-bit addr shifted for HAL
+#define MEAS_BUFFER_SIZE 100 // Keep this many values
 
 /**
  * Reads the raw 10-bit ADC value from MCP3021.
@@ -98,8 +99,16 @@ static void MX_ADC1_Init(void);
   * @retval int
   */
 
-float voltage_triangle = 0.0f;
-float voltage_langmuir = 0.0f;   // new — internal ADC reading
+float voltage_triangle = 0.0f; // Raw reading
+float voltage_langmuir = 0.0f; // Raw reading
+
+float voltage = 0.0f; // Calculated reading
+float current = 0.0f; // Calculated reading
+
+float measurements_voltage[MEAS_BUFFER_SIZE] = {0}; // Storage
+float measurements_current[MEAS_BUFFER_SIZE] = {0}; // Storage
+
+uint8_t meas_index = 0; // Counter
 
 HAL_StatusTypeDef i2c_status;
 uint32_t i2c_error;
@@ -148,8 +157,6 @@ int main(void)
   MX_I2C1_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-//  float measurements_voltage[100];
-//  float measurements_current[100];
 
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
 
@@ -166,9 +173,18 @@ int main(void)
 	    i2c_status = HAL_I2C_Master_Receive(&hi2c1, MCP3021_ADDR, buf, 2, HAL_MAX_DELAY);
 	    i2c_error  = HAL_I2C_GetError(&hi2c1);
 
+	    // Read raw voltages
 	    voltage_triangle = MCP3021_ReadVoltage(&hi2c1);
+	    voltage_langmuir = ReadInternalADC(); // Read voltages
 
-	    voltage_langmuir = ReadInternalADC();
+	    // Calculate voltage and current
+	    voltage = (voltage_triangle * 169.0f) - 266.4f;
+	    current = (((voltage_langmuir * 70.3f) - 109.9f) - voltage) / 3000.0f; // Calculate current and voltage
+
+	    // Add to memory
+	    measurements_voltage[meas_index] = voltage;
+	    measurements_current[meas_index] = current;
+	    meas_index = (meas_index + 1) % MEAS_BUFFER_SIZE;
 
 	    HAL_Delay(100);  // Read every 100ms
 
