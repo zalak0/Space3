@@ -20,6 +20,7 @@
 #include "main.h"
 #include "gps.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -105,11 +106,32 @@ int main(void)
   while (1)
   {
       /* USER CODE BEGIN 3 */
-	if (gps_line_ready) {
-		gps_line_ready = 0;
-		HAL_UART_Transmit(&huart1, print_buffer, strlen((char*)print_buffer), 100);
-		HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
-	}
+//	    if (gps_line_ready) {
+//	        gps_line_ready = 0;
+//	        HAL_UART_Transmit(&huart1, print_buffer, strlen((char*)print_buffer), 100);
+//	        HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
+//	    }
+
+	    if (gps_line_ready) {
+	        gps_line_ready = 0;
+
+	        if (GPS.lock > 0) {
+	            // We have a valid fix
+	            char out[128];
+	            snprintf(out, sizeof(out),
+	                "LAT: %.6f  LON: %.6f  Sats: %d  Alt: %.1f m\r\n",
+	                GPS.dec_latitude,
+	                GPS.dec_longitude,
+	                GPS.satelites,
+	                GPS.msl_altitude);
+	            HAL_UART_Transmit(&huart1, (uint8_t*)out, strlen(out), 100);
+	        } else {
+	            // No fix yet
+	            uint8_t msg[] = "No fix\r\n";
+	            HAL_UART_Transmit(&huart1, msg, sizeof(msg)-1, 100);
+	        }
+	    }
+
       /* USER CODE END 3 */
   }
   /* USER CODE END 3 */
