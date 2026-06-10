@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Payload_STM_GPS_Actual_1
+BUILD_ARTIFACT_NAME := Payload_STM_Burn_Actual
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Payload_STM_GPS_Actual_1.elf \
+Payload_STM_Burn_Actual.elf \
 
 MAP_FILES += \
-Payload_STM_GPS_Actual_1.map \
+Payload_STM_Burn_Actual.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Payload_STM_GPS_Actual_1.list \
+Payload_STM_Burn_Actual.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Payload_STM_GPS_Actual_1.elf secondary-outputs
+main-build: Payload_STM_Burn_Actual.elf secondary-outputs
 
 # Tool invocations
-Payload_STM_GPS_Actual_1.elf Payload_STM_GPS_Actual_1.map: $(OBJS) $(USER_OBJS) C:\Users\getsc\Desktop\File\ Storage\Space3\ Github\Space3\Payload_STM_GPS_Test_1\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Payload_STM_GPS_Actual_1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\getsc\Desktop\File Storage\Space3 Github\Space3\Payload_STM_GPS_Test_1\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Payload_STM_GPS_Actual_1.map" -Wl,--gc-sections -static -u _scanf_float -u _printf_float --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Payload_STM_Burn_Actual.elf Payload_STM_Burn_Actual.map: $(OBJS) $(USER_OBJS) C:\Users\getsc\Desktop\File\ Storage\Space3\ Github\Space3\Payload_STM_Burn_Actual\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Payload_STM_Burn_Actual.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\getsc\Desktop\File Storage\Space3 Github\Space3\Payload_STM_Burn_Actual\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Payload_STM_Burn_Actual.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Payload_STM_GPS_Actual_1.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Payload_STM_GPS_Actual_1.list"
+Payload_STM_Burn_Actual.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Payload_STM_Burn_Actual.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Payload_STM_GPS_Actual_1.elf Payload_STM_GPS_Actual_1.list Payload_STM_GPS_Actual_1.map default.size.stdout
+	-$(RM) Payload_STM_Burn_Actual.elf Payload_STM_Burn_Actual.list Payload_STM_Burn_Actual.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
