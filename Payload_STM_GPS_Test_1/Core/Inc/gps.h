@@ -3,7 +3,7 @@
 
 #include "stm32h7xx_hal.h"
 
-#define GPS_USART   &huart1
+#define GPS_USART   &huart4
 #define GPSBUFSIZE  128
 
 typedef struct {

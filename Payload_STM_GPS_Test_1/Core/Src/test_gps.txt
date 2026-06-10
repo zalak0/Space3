@@ -4,7 +4,7 @@
 #include "stm32h7xx_hal.h"
 
 
-extern UART_HandleTypeDef huart4;  // ← add this line
+extern UART_HandleTypeDef huart1;  // ← add this line
 
 uint8_t rx_data = 0;
 uint8_t rx_buffer[GPSBUFSIZE];
