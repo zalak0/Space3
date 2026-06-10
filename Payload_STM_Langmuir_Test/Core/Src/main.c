@@ -99,33 +99,6 @@ static void MX_ADC1_Init(void);
   * @retval int
   */
 
-float voltage_triangle = 0.0f; // Raw reading
-float voltage_langmuir = 0.0f; // Raw reading
-
-float voltage = 0.0f; // Calculated reading
-float current = 0.0f; // Calculated reading
-
-float measurements_voltage[MEAS_BUFFER_SIZE] = {0}; // Storage
-float measurements_current[MEAS_BUFFER_SIZE] = {0}; // Storage
-
-uint8_t meas_index = 0; // Counter
-
-HAL_StatusTypeDef i2c_status;
-uint32_t i2c_error;
-
-float ReadInternalADC(void)
-{
-    HAL_ADC_Start(&hadc1);
-    if (HAL_ADC_PollForConversion(&hadc1, 100) != HAL_OK)
-        return -1.0f;
-
-    uint32_t raw = HAL_ADC_GetValue(&hadc1);
-    HAL_ADC_Stop(&hadc1);
-
-    // STM32H7 ADC is 16-bit, max value 65535
-    return ((float)raw / 65535.0f) * 3.3f;
-}
-
 int main(void)
 {
 
