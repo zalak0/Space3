@@ -1,0 +1,5 @@
+../Core/Src/charger_manager.c:27:30:ChargerManager_GetDefaultConfig	4	static
+../Core/Src/charger_manager.c:32:6:ChargerManager_Init	8	static
+../Core/Src/charger_manager.c:40:6:ChargerManager_ApplyConfig	16	static
+../Core/Src/charger_manager.c:83:6:ChargerManager_ServiceWatchdog	8	static
+../Core/Src/charger_manager.c:88:6:ChargerManager_ReadTelemetry	16	static
