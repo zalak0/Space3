@@ -200,11 +200,5 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /* USER CODE BEGIN 1 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == UART4)
-    {
-        GPS_UART_CallBack();
-    }
-}
+
 /* USER CODE END 1 */

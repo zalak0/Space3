@@ -163,7 +163,7 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  // BURN WIRE
+  // BURN WIRE TASK
 //  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_SET);
 //  HAL_Delay(2000);
 //  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
@@ -218,7 +218,7 @@ int main(void)
 	//	        HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
 	//	    }
 
-	if (gps_line_ready) {
+//	if (gps_line_ready) {
 		gps_line_ready = 0;
 
 		if (GPS.lock > 0) {
@@ -236,7 +236,7 @@ int main(void)
 			uint8_t msg[] = "No fix\r\n";
 			HAL_UART_Transmit(&huart4, msg, sizeof(msg)-1, 100);
 		}
-	}
+//	}
 
   }
   /* USER CODE END 3 */

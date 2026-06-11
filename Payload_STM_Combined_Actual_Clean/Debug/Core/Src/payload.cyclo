@@ -1,0 +1,8 @@
+../Core/Src/payload.c:37:6:payload_init	1
+../Core/Src/payload.c:51:6:payload_task	3
+../Core/Src/payload.c:74:13:langmuir_task	1
+../Core/Src/payload.c:90:13:gps_task	3
+../Core/Src/payload.c:112:13:burn_task	1
+../Core/Src/payload.c:123:16:mcp3021_read_raw	2
+../Core/Src/payload.c:135:14:mcp3021_read_voltage	2
+../Core/Src/payload.c:142:14:read_internal_adc	2
