@@ -1,5 +1,5 @@
-#include "stm/stm.h"
-#include "common/goose_config.h"
+#include "stm.h"
+#include "goose_config.h"
 #include <math.h>
 
 static float rate_norm(const adcs_state_t *x) {
