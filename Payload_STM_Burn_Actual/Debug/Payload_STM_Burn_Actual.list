@@ -114,8 +114,8 @@ int main(void)
  80002ee:	f44f 6100 	mov.w	r1, #2048	@ 0x800
  80002f2:	4807      	ldr	r0, [pc, #28]	@ (8000310 <main+0x38>)
  80002f4:	f000 fdda 	bl	8000eac <HAL_GPIO_WritePin>
-  HAL_Delay(1000);
- 80002f8:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+  HAL_Delay(2000);
+ 80002f8:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
  80002fc:	f000 fa90 	bl	8000820 <HAL_Delay>
   HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
  8000300:	2200      	movs	r2, #0
