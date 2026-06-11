@@ -176,6 +176,15 @@ int main(void)
 	i2c_status = HAL_I2C_Master_Receive(&hi2c4, MCP3021_ADDR, buf, 2, HAL_MAX_DELAY);
 	i2c_error  = HAL_I2C_GetError(&hi2c4);
 
+	// payload_task(&ctx, mode, &hi2c4, &huart4){
+	// if (MODE_SCIENCE){
+		// langmuir_task(&hi2c4)
+		// gps_task(&huart4)
+	// }
+	// if (MODE_DEPLOYMENT){
+		// burn_task(
+
+
 	// Read raw voltages
 	voltage_triangle = MCP3021_ReadVoltage(&hi2c4);
 	voltage_langmuir = ReadInternalADC(); // Read voltages
