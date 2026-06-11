@@ -22,6 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "payload.h"
+#include "langmuir.h"
+#include "gps_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,8 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-static PayloadCtx payload_ctx;
-static PayloadMode current_mode = MODE_SCIENCE;  // or set dynamically
+ADC_HandleTypeDef hadc3;
+I2C_HandleTypeDef hi2c4;
+UART_HandleTypeDef huart4;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,63 +62,6 @@ static void MX_UART4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-/**
- * Reads the raw 10-bit ADC value from MCP3021.
- * Returns -1 on I2C error.
- */
-int32_t MCP3021_ReadRaw(I2C_HandleTypeDef *hi2c)
-{
-    uint8_t buf[2] = {0};
-
-    if (HAL_I2C_Master_Receive(hi2c, MCP3021_ADDR, buf, 2, HAL_MAX_DELAY) != HAL_OK)
-        return -1;
-
-    // Data is 10-bit, MSB first, left-justified across two bytes
-    // Bits [15:6] of the 16-bit word are the ADC data
-    uint16_t raw = ((uint16_t)buf[0] << 8) | buf[1];
-    raw = (raw >> 2) & 0x03FF;  // shift right 2, mask to 10 bits (SAR format)
-
-    return (int32_t)raw;
-}
-
-/**
- * Converts raw ADC value to voltage (assuming 3.3V reference).
- */
-float MCP3021_ReadVoltage(I2C_HandleTypeDef *hi2c)
-{
-    int32_t raw = MCP3021_ReadRaw(hi2c);
-    if (raw < 0) return -1.0f;
-
-    return ((float)raw / 1023.0f) * 3.3f;
-}
-
-float voltage_triangle = 0.0f; // Raw reading
-float voltage_langmuir = 0.0f; // Raw reading
-
-float voltage = 0.0f; // Calculated reading
-float current = 0.0f; // Calculated reading
-
-float measurements_voltage[MEAS_BUFFER_SIZE] = {0}; // Storage
-float measurements_current[MEAS_BUFFER_SIZE] = {0}; // Storage
-
-uint8_t meas_index = 0; // Counter
-
-HAL_StatusTypeDef i2c_status;
-uint32_t i2c_error;
-
-float ReadInternalADC(void)
-{
-    HAL_ADC_Start(&hadc3);
-    if (HAL_ADC_PollForConversion(&hadc3, 100) != HAL_OK)
-        return -1.0f;
-
-    uint32_t raw = HAL_ADC_GetValue(&hadc3);
-    HAL_ADC_Stop(&hadc3);
-
-    // STM32H7 ADC is 16-bit, max value 65535
-    return ((float)raw / 65535.0f) * 3.3f;
-}
 
 /* USER CODE END 0 */
 
@@ -157,17 +103,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // BURN WIRE TASK
-//  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_SET);
+
+  //  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_SET);
 //  HAL_Delay(2000);
 //  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
 
-  // GPS START
-  GPS_Init();
+  PayloadContext ctx = {0};
+  PayloadMode mode = MODE_DEPLOYMENT;
 
-  // LANGMUIR START
-  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_9, GPIO_PIN_SET); // Activate Langmuir!
-
+  if (mode == MODE_SCIENCE)
+  {
+      gps_task_init();
+      langmuir_init();
+  }
 
   /* USER CODE END 2 */
 
@@ -175,9 +123,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	uint8_t buf[2] = {0};
-	i2c_status = HAL_I2C_Master_Receive(&hi2c4, MCP3021_ADDR, buf, 2, HAL_MAX_DELAY);
-	i2c_error  = HAL_I2C_GetError(&hi2c4);
 
 	// payload_task(&ctx, mode, &hi2c4, &huart4){
 	// if (MODE_SCIENCE){
@@ -187,49 +132,12 @@ int main(void)
 	// if (MODE_DEPLOYMENT){
 		// burn_task(
 
+	  payload_task(&ctx, mode, &hi2c4, &huart4);
+	  HAL_Delay(100);
 
-	// Read raw voltages
-	voltage_triangle = MCP3021_ReadVoltage(&hi2c4);
-	voltage_langmuir = ReadInternalADC(); // Read voltages
-
-	// Calculate voltage and current
-	voltage = (voltage_triangle * 169.0f) - 266.4f;
-	current = (((voltage_langmuir * 70.3f) - 109.9f) - voltage) / 3000.0f; // Calculate current and voltage
-
-	// Add to memory
-	measurements_voltage[meas_index] = voltage;
-	measurements_current[meas_index] = current;
-	meas_index = (meas_index + 1) % MEAS_BUFFER_SIZE;
-
-	HAL_Delay(100);  // Read every 100ms
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//	    if (gps_line_ready) {
-	//	        gps_line_ready = 0;
-	//	        HAL_UART_Transmit(&huart1, print_buffer, strlen((char*)print_buffer), 100);
-	//	        HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
-	//	    }
-
-	if (gps_line_ready) {
-		gps_line_ready = 0;
-
-		if (GPS.lock > 0) {
-			// We have a valid fix
-			char out[128];
-			snprintf(out, sizeof(out),
-				"LAT: %.6f  LON: %.6f  Sats: %d  Alt: %.1f m\r\n",
-				GPS.dec_latitude,
-				GPS.dec_longitude,
-				GPS.satelites,
-				GPS.msl_altitude);
-			HAL_UART_Transmit(&huart4, (uint8_t*)out, strlen(out), 100);
-		} else {
-			// No fix yet
-			uint8_t msg[] = "No fix\r\n";
-			HAL_UART_Transmit(&huart4, msg, sizeof(msg)-1, 100);
-		}
-	}
 
   }
   /* USER CODE END 3 */

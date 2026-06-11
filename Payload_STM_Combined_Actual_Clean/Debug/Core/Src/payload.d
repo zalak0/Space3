@@ -1,5 +1,5 @@
 Core/Src/payload.o: ../Core/Src/payload.c ../Core/Inc/payload.h \
- ../Core/Inc/main.h ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h \
@@ -33,9 +33,8 @@ Core/Src/payload.o: ../Core/Src/payload.c ../Core/Inc/payload.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/Inc/gps.h ../Core/Inc/gps.h
+ ../Core/Inc/langmuir.h ../Core/Inc/gps_task.h ../Core/Inc/burn.h
 ../Core/Inc/payload.h:
-../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -70,5 +69,6 @@ Core/Src/payload.o: ../Core/Src/payload.c ../Core/Inc/payload.h \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
-../Core/Inc/gps.h:
-../Core/Inc/gps.h:
+../Core/Inc/langmuir.h:
+../Core/Inc/gps_task.h:
+../Core/Inc/burn.h:

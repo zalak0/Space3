@@ -1,4 +1,7 @@
+"./Core/Src/burn.o"
 "./Core/Src/gps.o"
+"./Core/Src/gps_task.o"
+"./Core/Src/langmuir.o"
 "./Core/Src/main.o"
 "./Core/Src/payload.o"
 "./Core/Src/stm32h7xx_hal_msp.o"
