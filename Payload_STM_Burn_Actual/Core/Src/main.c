@@ -92,7 +92,7 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_SET);
-  HAL_Delay(1000);
+  HAL_Delay(2000);
   HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 

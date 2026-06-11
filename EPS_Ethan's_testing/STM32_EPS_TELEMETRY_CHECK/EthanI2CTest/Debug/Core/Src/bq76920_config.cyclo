@@ -1,0 +1,12 @@
+../Core/Src/bq76920_config.c:7:13:BQ76920_TS1_GPIO_Output	1
+../Core/Src/bq76920_config.c:19:13:BQ76920_TS1_GPIO_HiZ	1
+../Core/Src/bq76920_config.c:34:19:BQ76920_Boot_TS1	2
+../Core/Src/bq76920_config.c:64:19:BQ76920_WriteReg	3
+../Core/Src/bq76920_config.c:82:19:BQ76920_ReadReg	4
+../Core/Src/bq76920_config.c:104:19:BQ76920_ReadWord14	5
+../Core/Src/bq76920_config.c:138:19:BQ76920_ReadCalibration	5
+../Core/Src/bq76920_config.c:182:19:BQ76920_ClearFaults	1
+../Core/Src/bq76920_config.c:191:19:BQ76920_Init_MonitoringOnly	10
+../Core/Src/bq76920_config.c:254:19:BQ76920_ReadCellRaw	8
+../Core/Src/bq76920_config.c:298:19:BQ76920_ReadCellVoltage_mV	4
+../Core/Src/bq76920_config.c:327:19:BQ76920_ReadAllCells_mV	5

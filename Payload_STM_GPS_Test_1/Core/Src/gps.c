@@ -68,6 +68,14 @@ void GPS_UART_CallBack(void)
     HAL_UART_Receive_IT(GPS_USART, &rx_data, 1);
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == UART4)
+    {
+        GPS_UART_CallBack();
+    }
+}
+
 int GPS_validate(char *nmeastr)
 {
     char check[3];

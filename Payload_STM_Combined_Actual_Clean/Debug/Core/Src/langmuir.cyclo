@@ -1,0 +1,5 @@
+../Core/Src/langmuir.c:11:16:MCP3021_ReadRaw	2
+../Core/Src/langmuir.c:22:14:MCP3021_ReadVoltage	2
+../Core/Src/langmuir.c:29:14:ReadInternalADC	2
+../Core/Src/langmuir.c:41:6:langmuir_init	1
+../Core/Src/langmuir.c:47:6:langmuir_task	1
