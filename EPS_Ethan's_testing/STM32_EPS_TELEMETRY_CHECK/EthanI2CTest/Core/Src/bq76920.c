@@ -115,8 +115,8 @@ bool BQ76920_Init(void)
     if (BQ76920_Write8(BQ76920_CC_CFG, 0x19) != HAL_OK)
         return false;
 
-    if (!BQ76920_ReadCalibration(&g_cal))
-        return false;
+//  if (!BQ76920_ReadCalibration(&g_cal))
+  //      return false;
 
     if (!BQ76920_EnableADC())
         return false;

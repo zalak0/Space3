@@ -3,7 +3,7 @@
 ../Core/Src/bq76920.c:33:19:BQ76920_Write8	1
 ../Core/Src/bq76920.c:46:19:BQ76920_ReadBlock	1
 ../Core/Src/bq76920.c:94:6:BQ76920_EnableADC	2
-../Core/Src/bq76920.c:106:6:BQ76920_Init	5
+../Core/Src/bq76920.c:106:6:BQ76920_Init	4
 ../Core/Src/bq76920.c:127:17:BQ76920_Combine14Bit	1
 ../Core/Src/bq76920.c:132:14:BQ76920_AdcToCellVoltage	1
 ../Core/Src/bq76920.c:148:6:BQ76920_ReadCellVoltage	4
