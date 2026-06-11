@@ -60,8 +60,8 @@ all: main-build
 main-build: Space_obc.elf secondary-outputs
 
 # Tool invocations
-Space_obc.elf Space_obc.map: $(OBJS) $(USER_OBJS) C:\Users\zalak\Desktop\Sem\ 4.1\AERO4701\Space_obc\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Space_obc.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\zalak\Desktop\Sem 4.1\AERO4701\Space_obc\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Space_obc.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Space_obc.elf Space_obc.map: $(OBJS) $(USER_OBJS) C:\Users\getsc\Desktop\File\ Storage\Space3\ Github\Space3\STM32\ implementation\OBC_testing\STM32H743XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Space_obc.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\getsc\Desktop\File Storage\Space3 Github\Space3\STM32 implementation\OBC_testing\STM32H743XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Space_obc.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
