@@ -163,8 +163,18 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+  // BURN WIRE
+//  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_SET);
+//  HAL_Delay(2000);
+//  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
+
+  // GPS START
   GPS_Init();
+
+  // LANGMUIR START
+  HAL_ADCEx_Calibration_Start(&hadc3, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_9, GPIO_PIN_SET); // Activate Langmuir!
+
 
   /* USER CODE END 2 */
 
@@ -460,10 +470,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11|GPIO_PIN_9, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PJ11 */
-  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  /*Configure GPIO pins : PJ11 PJ9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
