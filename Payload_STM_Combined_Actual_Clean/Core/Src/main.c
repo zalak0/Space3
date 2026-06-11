@@ -47,6 +47,8 @@
 ADC_HandleTypeDef hadc3;
 I2C_HandleTypeDef hi2c4;
 UART_HandleTypeDef huart4;
+
+GOOSE_Payload payload_out = {0};  // <-- add this
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -109,7 +111,7 @@ int main(void)
 //  HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_11, GPIO_PIN_RESET);
 
   PayloadContext ctx = {0};
-  PayloadMode mode = MODE_DEPLOYMENT;
+  PayloadMode mode = MODE_SCIENCE;
 
   if (mode == MODE_SCIENCE)
   {
@@ -132,7 +134,7 @@ int main(void)
 	// if (MODE_DEPLOYMENT){
 		// burn_task(
 
-	  payload_task(&ctx, mode, &hi2c4, &huart4);
+	  payload_task(&ctx, mode, &hi2c4, &huart4, &payload_out);  // <-- pass struct
 	  HAL_Delay(100);
 
     /* USER CODE END WHILE */
