@@ -60,8 +60,8 @@ all: main-build
 main-build: Space_adcs_test_f3.elf secondary-outputs
 
 # Tool invocations
-Space_adcs_test_f3.elf Space_adcs_test_f3.map: $(OBJS) $(USER_OBJS) C:\Users\zalak\Desktop\Sem\ 4.1\AERO4701\Space_adcs_test_f3\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Space_adcs_test_f3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\zalak\Desktop\Sem 4.1\AERO4701\Space_adcs_test_f3\STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Space_adcs_test_f3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Space_adcs_test_f3.elf Space_adcs_test_f3.map: $(OBJS) $(USER_OBJS) C:\Users\zalak\Desktop\GitHub_Repos\Space3\STM32\ implementation\ADCS_testing\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Space_adcs_test_f3.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\zalak\Desktop\GitHub_Repos\Space3\STM32 implementation\ADCS_testing\STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Space_adcs_test_f3.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

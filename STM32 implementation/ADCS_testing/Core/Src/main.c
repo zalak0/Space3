@@ -106,6 +106,8 @@ int main(void)
   drv8833_init();
   adcs_dipole_t m = { 0.046f, -0.023f, 0.046f };  /* +half X, full reverse Y, off Z */
   torquer_apply(&m);
+  //test_orbital_convergence();
+  test_bdot_detumble();
   /* USER CODE END 2 */
 
   /* Infinite loop */

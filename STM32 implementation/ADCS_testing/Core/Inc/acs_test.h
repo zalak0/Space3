@@ -27,5 +27,7 @@ void test_orbital_convergence(void);
 
 void test_lyapunov_descent(void);
 
+void test_bdot_detumble(void);
+
 #endif /* ACS_TEST_H */
 

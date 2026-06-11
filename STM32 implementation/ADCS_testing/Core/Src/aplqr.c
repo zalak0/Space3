@@ -25,16 +25,35 @@ void aplqr_step(const adcs_state_t *x, const float B_lvlh[3], adcs_dipole_t *m_c
             K[i][j]=Rinv[i]*acc;
         }
 
-    const float xv[6]={x->phi,x->phi_dot,x->theta,x->theta_dot,x->psi,x->psi_dot};
+    const float xv[6]={
+    		x->phi,
+			x->phi_dot,
+			x->theta,
+			x->theta_dot,
+			x->psi,
+			x->psi_dot
+    };
 
     float u[3];
-    for (int i=0;i<3;i++){ float acc=0.f; for(int j=0;j<6;j++) acc+=K[i][j]*xv[j]; u[i]=-acc; }
+    for (int i=0;i<3;i++){
+    	float acc=0.f;
+    	for(int j=0;j<6;j++) {
+    		acc+=K[i][j]*xv[j]; u[i]=-acc;
+    	}
+    }
 
     /* direction-preserving saturation — same as your beta-scaling */
     float beta=0.f;
-    for (int i=0;i<3;i++){ float a=fabsf(u[i])/M_MAX_HW; if(a>beta) beta=a; }
+    for (int i=0;i<3;i++){
+    	float a=fabsf(u[i])/M_MAX_HW;
+    	if(a>beta) beta=a;
+    }
+
     float s = (beta>1.f)? 1.f/beta : 1.f;
-    m_cmd->mx=u[0]*s; m_cmd->my=u[1]*s; m_cmd->mz=u[2]*s;
+
+    m_cmd->mx=u[0]*s;
+    m_cmd->my=u[1]*s;
+    m_cmd->mz=u[2]*s;
 }
 
 //void torquer_apply(const adcs_dipole_t *m)

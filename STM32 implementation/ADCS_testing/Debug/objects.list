@@ -1,5 +1,7 @@
+"./Core/Src/acs_task.o"
 "./Core/Src/acs_test.o"
 "./Core/Src/aplqr.o"
+"./Core/Src/bdot.o"
 "./Core/Src/magnetorquer.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f3xx_hal_msp.o"

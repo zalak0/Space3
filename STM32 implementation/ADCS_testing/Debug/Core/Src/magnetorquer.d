@@ -30,7 +30,7 @@ Core/Src/magnetorquer.o: ../Core/Src/magnetorquer.c \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi_ex.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h \
- ../Core/Inc/aplqr.h
+ ../Core/Inc/aplqr.h ../Core/Inc/adcs_types.h
 ../Core/Inc/magnetorquer.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
@@ -64,3 +64,4 @@ Core/Src/magnetorquer.o: ../Core/Src/magnetorquer.c \
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h:
 ../Core/Inc/aplqr.h:
+../Core/Inc/adcs_types.h:

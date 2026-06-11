@@ -8,4 +8,8 @@
 ../Core/Src/acs_test.c:141:13:get_B_lvlh	1
 ../Core/Src/acs_test.c:153:6:test_bfield_sensitivity	2
 ../Core/Src/acs_test.c:179:6:test_orbital_convergence	3
-../Core/Src/acs_test.c:242:6:test_lyapunov_descent	12
+../Core/Src/acs_test.c:244:13:bd_dcm	1
+../Core/Src/acs_test.c:250:13:bd_qmul	1
+../Core/Src/acs_test.c:256:13:bd_deriv	2
+../Core/Src/acs_test.c:265:6:test_bdot_detumble	14
+../Core/Src/acs_test.c:354:6:test_lyapunov_descent	12

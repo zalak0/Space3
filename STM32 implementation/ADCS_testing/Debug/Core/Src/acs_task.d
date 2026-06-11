@@ -1,4 +1,8 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/acs_task.o: ../Core/Src/acs_task.c ../Core/Inc/adcs_types.h \
+ ../Core/Inc/acs_task.h ../Core/Inc/modes.h ../Core/Inc/adcs_types.h \
+ ../Core/Inc/fsw_ctx.h ../Core/Inc/modes.h ../Core/Inc/fsw_ctx.h \
+ ../Core/Inc/aplqr.h ../Core/Inc/bdot.h ../Core/Inc/aplqr.h \
+ ../Core/Inc/magnetorquer.h ../Core/Inc/main.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h \
  ../Core/Inc/stm32f3xx_hal_conf.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h \
@@ -28,9 +32,18 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi_ex.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h \
- ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h \
- ../Core/Inc/acs_test.h ../Core/Inc/aplqr.h ../Core/Inc/adcs_types.h \
- ../Core/Inc/magnetorquer.h ../Core/Inc/main.h ../Core/Inc/aplqr.h
+ ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h
+../Core/Inc/adcs_types.h:
+../Core/Inc/acs_task.h:
+../Core/Inc/modes.h:
+../Core/Inc/adcs_types.h:
+../Core/Inc/fsw_ctx.h:
+../Core/Inc/modes.h:
+../Core/Inc/fsw_ctx.h:
+../Core/Inc/aplqr.h:
+../Core/Inc/bdot.h:
+../Core/Inc/aplqr.h:
+../Core/Inc/magnetorquer.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
 ../Core/Inc/stm32f3xx_hal_conf.h:
@@ -62,9 +75,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi_ex.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_tim_ex.h:
-../Core/Inc/acs_test.h:
-../Core/Inc/aplqr.h:
-../Core/Inc/adcs_types.h:
-../Core/Inc/magnetorquer.h:
-../Core/Inc/main.h:
-../Core/Inc/aplqr.h:

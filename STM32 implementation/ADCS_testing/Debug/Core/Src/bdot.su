@@ -1,0 +1,2 @@
+../Core/Src/bdot.c:8:6:bdot_init	16	static
+../Core/Src/bdot.c:14:6:bdot_step	72	static
