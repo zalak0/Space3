@@ -35,6 +35,46 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+typedef struct
+{
+  uint32_t init_ok;
+  uint32_t update_count;
+  uint32_t last_update_ms;
+  uint32_t icm_addr;
+  uint32_t last_error_stage;
+  uint32_t last_hal_status;
+  uint32_t mag_bypass_ok;
+  uint32_t mag_whoami_ok;
+  uint32_t mag_config_ok;
+  uint32_t mag_raw_ok;
+  uint32_t mag_wia2;
+  uint32_t mag_st1;
+  uint32_t mag_st2;
+
+  int32_t accel_x_raw;
+  int32_t accel_y_raw;
+  int32_t accel_z_raw;
+  int32_t gyro_x_raw;
+  int32_t gyro_y_raw;
+  int32_t gyro_z_raw;
+  int32_t mag_x_raw;
+  int32_t mag_y_raw;
+  int32_t mag_z_raw;
+  int32_t temp_raw;
+  int32_t mag_temp_raw;
+
+  float accel_x_mps2;
+  float accel_y_mps2;
+  float accel_z_mps2;
+  float gyro_x_radps;
+  float gyro_y_radps;
+  float gyro_z_radps;
+  float mag_x_uT;
+  float mag_y_uT;
+  float mag_z_uT;
+  float temp_c;
+} GOOSE_ImuLiveDebug;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -72,6 +112,29 @@
 
 #define AK09916_ST1_DRDY                  0x01u
 #define AK09916_ST2_HOFL                  0x08u
+
+#define GOOSE_I2C_DEBUG_ONLY              1u
+#define GOOSE_I2C_DEBUG_PERIOD_MS         50u
+
+#define ICM20948_ADDR_PRIMARY             0x69u
+#define ICM20948_ADDR_SECONDARY           0x68u
+#define ICM20948_WHOAMI_EXPECTED          0xEAu
+
+#define ICM20948_REG_WHO_AM_I             0x00u
+#define ICM20948_PWR_MGMT_1               0x06u
+#define ICM20948_PWR_MGMT_2               0x07u
+#define ICM20948_ACCEL_XOUT_H             0x2Du
+#define ICM20948_BANK2                    0x20u
+#define ICM20948_GYRO_CONFIG_1            0x01u
+#define ICM20948_ACCEL_CONFIG             0x14u
+
+#define ICM20948_ACCEL_CONFIG_4G          0x02u
+#define ICM20948_GYRO_CONFIG_500DPS       0x02u
+
+#define ICM20948_TEMP_SENS_LSB_PER_C      333.87f
+#define ICM20948_TEMP_OFFSET_C            21.0f
+
+#define AK09916_UT_PER_LSB                0.15f
 
 /* USER CODE END PD */
 
@@ -193,6 +256,18 @@ static int32_t g_ak09916_mag_x_raw_debug = 0;
 static int32_t g_ak09916_mag_y_raw_debug = 0;
 static int32_t g_ak09916_mag_z_raw_debug = 0;
 
+volatile GOOSE_ImuLiveDebug g_imu_live_debug = {0};
+
+volatile int32_t g_icm20948_temp_raw_debug = 0;
+volatile float g_icm20948_temp_c_debug = 0.0f;
+
+volatile float g_ak09916_mag_x_uT_debug = 0.0f;
+volatile float g_ak09916_mag_y_uT_debug = 0.0f;
+volatile float g_ak09916_mag_z_uT_debug = 0.0f;
+volatile int32_t g_ak09916_mag_temp_raw_debug = 0;
+
+static uint32_t g_imu_live_last_read_ms = 0u;
+
 
 /* USER CODE END PV */
 
@@ -256,6 +331,46 @@ static HAL_StatusTypeDef GOOSE_AK09916_ReadRegs(uint8_t reg,
                           data,
                           len,
                           100u);
+}
+
+static HAL_StatusTypeDef GOOSE_ICM20948_ReadReg(uint8_t icm_addr_7bit,
+                                                uint8_t reg,
+                                                uint8_t *value)
+{
+  return HAL_I2C_Mem_Read(&hi2c2,
+                          (uint16_t)(icm_addr_7bit << 1),
+                          reg,
+                          I2C_MEMADD_SIZE_8BIT,
+                          value,
+                          1u,
+                          100u);
+}
+
+static HAL_StatusTypeDef GOOSE_ICM20948_ReadRegs(uint8_t icm_addr_7bit,
+                                                 uint8_t reg,
+                                                 uint8_t *data,
+                                                 uint16_t len)
+{
+  return HAL_I2C_Mem_Read(&hi2c2,
+                          (uint16_t)(icm_addr_7bit << 1),
+                          reg,
+                          I2C_MEMADD_SIZE_8BIT,
+                          data,
+                          len,
+                          100u);
+}
+
+static HAL_StatusTypeDef GOOSE_ICM20948_SelectBank(uint8_t icm_addr_7bit,
+                                                   uint8_t bank)
+{
+  return GOOSE_ICM20948_WriteReg(icm_addr_7bit,
+                                 ICM20948_REG_BANK_SEL,
+                                 bank);
+}
+
+static int16_t GOOSE_ReadI16BE(const uint8_t *p)
+{
+  return (int16_t)(((uint16_t)p[0] << 8) | (uint16_t)p[1]);
 }
 
 static void GOOSE_AK09916_InitForTelemetry(void)
@@ -398,7 +513,279 @@ static void GOOSE_AK09916_ReadMagOnce(void)
   g_ak09916_mag_z_raw_debug =
       (int32_t)((int16_t)((uint16_t)data[4] | ((uint16_t)data[5] << 8)));
 
+  g_ak09916_mag_temp_raw_debug = (int32_t)((int8_t)data[6]);
+
+  g_ak09916_mag_x_uT_debug = (float)g_ak09916_mag_x_raw_debug * AK09916_UT_PER_LSB;
+  g_ak09916_mag_y_uT_debug = (float)g_ak09916_mag_y_raw_debug * AK09916_UT_PER_LSB;
+  g_ak09916_mag_z_uT_debug = (float)g_ak09916_mag_z_raw_debug * AK09916_UT_PER_LSB;
+
+  g_imu_live_debug.mag_x_raw = g_ak09916_mag_x_raw_debug;
+  g_imu_live_debug.mag_y_raw = g_ak09916_mag_y_raw_debug;
+  g_imu_live_debug.mag_z_raw = g_ak09916_mag_z_raw_debug;
+  g_imu_live_debug.mag_temp_raw = g_ak09916_mag_temp_raw_debug;
+  g_imu_live_debug.mag_x_uT = g_ak09916_mag_x_uT_debug;
+  g_imu_live_debug.mag_y_uT = g_ak09916_mag_y_uT_debug;
+  g_imu_live_debug.mag_z_uT = g_ak09916_mag_z_uT_debug;
+  g_imu_live_debug.mag_raw_ok = 1u;
+  g_imu_live_debug.mag_wia2 = g_ak09916_wia2_debug;
+  g_imu_live_debug.mag_st1 = g_ak09916_st1_debug;
+  g_imu_live_debug.mag_st2 = g_ak09916_st2_debug;
+
   g_ak09916_raw_ok = 1u;
+}
+
+
+static void GOOSE_DebugImuI2cOnlyInit(void)
+{
+  HAL_StatusTypeDef status;
+  uint8_t addr = 0u;
+  uint8_t whoami = 0u;
+
+  g_imu_live_debug.init_ok = 0u;
+  g_imu_live_debug.last_error_stage = 1u;
+
+  g_icm20948_probe_count_debug++;
+  g_icm20948_probe_done = 1u;
+  g_icm20948_probe_found = 0u;
+  g_icm20948_whoami_ok = 0u;
+  g_icm20948_config_ok = 0u;
+  g_icm20948_raw_ok = 0u;
+
+  status = HAL_I2C_IsDeviceReady(&hi2c2,
+                                 (uint16_t)(ICM20948_ADDR_PRIMARY << 1),
+                                 2u,
+                                 100u);
+  g_icm20948_hal_status_0x69_debug = (uint32_t)status;
+
+  if (status == HAL_OK)
+  {
+    addr = ICM20948_ADDR_PRIMARY;
+  }
+  else
+  {
+    status = HAL_I2C_IsDeviceReady(&hi2c2,
+                                   (uint16_t)(ICM20948_ADDR_SECONDARY << 1),
+                                   2u,
+                                   100u);
+    g_icm20948_hal_status_0x68_debug = (uint32_t)status;
+
+    if (status == HAL_OK)
+    {
+      addr = ICM20948_ADDR_SECONDARY;
+    }
+  }
+
+  g_icm20948_probe_result_debug = (uint32_t)status;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+
+  if (addr == 0u)
+  {
+    g_imu_live_debug.last_error_stage = 2u;
+    return;
+  }
+
+  g_icm20948_detected_addr_debug = (uint32_t)addr;
+  g_imu_live_debug.icm_addr = (uint32_t)addr;
+  g_icm20948_probe_found = 1u;
+
+  status = GOOSE_ICM20948_SelectBank(addr, ICM20948_BANK0);
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 3u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_ReadReg(addr, ICM20948_REG_WHO_AM_I, &whoami);
+  g_icm20948_whoami_hal_status_debug = (uint32_t)status;
+  g_icm20948_whoami_value_debug = (uint32_t)whoami;
+  g_icm20948_whoami_read_count_debug++;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+
+  if ((status != HAL_OK) || (whoami != ICM20948_WHOAMI_EXPECTED))
+  {
+    g_imu_live_debug.last_error_stage = 4u;
+    return;
+  }
+
+  g_icm20948_whoami_ok = 1u;
+
+  status = GOOSE_ICM20948_WriteReg(addr, ICM20948_PWR_MGMT_1, 0x01u);
+  g_icm20948_wake_hal_status_debug = (uint32_t)status;
+  g_icm20948_wake_result_debug = (uint32_t)status;
+  g_icm20948_wake_count_debug++;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 5u;
+    return;
+  }
+
+  HAL_Delay(20u);
+
+  status = GOOSE_ICM20948_WriteReg(addr, ICM20948_PWR_MGMT_2, 0x00u);
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 6u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_SelectBank(addr, ICM20948_BANK2);
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 7u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_WriteReg(addr,
+                                   ICM20948_GYRO_CONFIG_1,
+                                   ICM20948_GYRO_CONFIG_500DPS);
+  g_icm20948_config_hal_status_debug = (uint32_t)status;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 8u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_WriteReg(addr,
+                                   ICM20948_ACCEL_CONFIG,
+                                   ICM20948_ACCEL_CONFIG_4G);
+  g_icm20948_config_hal_status_debug = (uint32_t)status;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 9u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_SelectBank(addr, ICM20948_BANK0);
+  g_icm20948_config_hal_status_debug = (uint32_t)status;
+  g_icm20948_config_result_debug = (uint32_t)status;
+  g_icm20948_config_count_debug++;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 10u;
+    return;
+  }
+
+  g_icm20948_config_ok = 1u;
+  g_imu_live_debug.init_ok = 1u;
+  g_imu_live_debug.last_error_stage = 0u;
+
+  /* Mag setup is allowed to fail without killing accel/gyro/temp debug. */
+  GOOSE_AK09916_InitForTelemetry();
+  g_imu_live_debug.mag_bypass_ok = (uint32_t)g_ak09916_bypass_ok;
+  g_imu_live_debug.mag_whoami_ok = (uint32_t)g_ak09916_whoami_ok;
+  g_imu_live_debug.mag_config_ok = (uint32_t)g_ak09916_config_ok;
+  g_imu_live_debug.mag_raw_ok = (uint32_t)g_ak09916_raw_ok;
+  g_imu_live_debug.mag_wia2 = g_ak09916_wia2_debug;
+  g_imu_live_debug.mag_st1 = g_ak09916_st1_debug;
+  g_imu_live_debug.mag_st2 = g_ak09916_st2_debug;
+}
+
+static void GOOSE_DebugImuI2cOnlyPoll(void)
+{
+  HAL_StatusTypeDef status;
+  uint8_t data[14] = {0};
+  int16_t ax;
+  int16_t ay;
+  int16_t az;
+  int16_t gx;
+  int16_t gy;
+  int16_t gz;
+  int16_t temp_raw;
+  uint8_t addr = (uint8_t)g_icm20948_detected_addr_debug;
+
+  if ((g_icm20948_whoami_ok == 0u) ||
+      (g_icm20948_config_ok == 0u) ||
+      (addr == 0u))
+  {
+    return;
+  }
+
+  status = GOOSE_ICM20948_SelectBank(addr, ICM20948_BANK0);
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+  if (status != HAL_OK)
+  {
+    g_imu_live_debug.last_error_stage = 11u;
+    return;
+  }
+
+  status = GOOSE_ICM20948_ReadRegs(addr, ICM20948_ACCEL_XOUT_H, data, 14u);
+  g_icm20948_raw_result_debug = (uint32_t)status;
+  g_icm20948_raw_hal_status_debug = (uint32_t)status;
+  g_icm20948_raw_read_count_debug++;
+  g_imu_live_debug.last_hal_status = (uint32_t)status;
+
+  if (status != HAL_OK)
+  {
+    g_icm20948_raw_ok = 0u;
+    g_imu_live_debug.last_error_stage = 12u;
+    return;
+  }
+
+  ax = GOOSE_ReadI16BE(&data[0]);
+  ay = GOOSE_ReadI16BE(&data[2]);
+  az = GOOSE_ReadI16BE(&data[4]);
+  gx = GOOSE_ReadI16BE(&data[6]);
+  gy = GOOSE_ReadI16BE(&data[8]);
+  gz = GOOSE_ReadI16BE(&data[10]);
+  temp_raw = GOOSE_ReadI16BE(&data[12]);
+
+  g_icm20948_accel_x_raw_debug = (int32_t)ax;
+  g_icm20948_accel_y_raw_debug = (int32_t)ay;
+  g_icm20948_accel_z_raw_debug = (int32_t)az;
+  g_icm20948_gyro_x_raw_debug = (int32_t)gx;
+  g_icm20948_gyro_y_raw_debug = (int32_t)gy;
+  g_icm20948_gyro_z_raw_debug = (int32_t)gz;
+  g_icm20948_temp_raw_debug = (int32_t)temp_raw;
+
+  g_icm20948_accel_x_mps2_debug = ((float)ax / ICM20948_ACCEL_4G_LSB_PER_G) * ICM20948_STANDARD_GRAVITY_MPS2;
+  g_icm20948_accel_y_mps2_debug = ((float)ay / ICM20948_ACCEL_4G_LSB_PER_G) * ICM20948_STANDARD_GRAVITY_MPS2;
+  g_icm20948_accel_z_mps2_debug = ((float)az / ICM20948_ACCEL_4G_LSB_PER_G) * ICM20948_STANDARD_GRAVITY_MPS2;
+  g_icm20948_gyro_x_radps_debug = ((float)gx / ICM20948_GYRO_500DPS_LSB_PER_DPS) * DEG_TO_RAD;
+  g_icm20948_gyro_y_radps_debug = ((float)gy / ICM20948_GYRO_500DPS_LSB_PER_DPS) * DEG_TO_RAD;
+  g_icm20948_gyro_z_radps_debug = ((float)gz / ICM20948_GYRO_500DPS_LSB_PER_DPS) * DEG_TO_RAD;
+  g_icm20948_temp_c_debug = ((float)temp_raw / ICM20948_TEMP_SENS_LSB_PER_C) + ICM20948_TEMP_OFFSET_C;
+
+  g_imu_live_debug.accel_x_raw = g_icm20948_accel_x_raw_debug;
+  g_imu_live_debug.accel_y_raw = g_icm20948_accel_y_raw_debug;
+  g_imu_live_debug.accel_z_raw = g_icm20948_accel_z_raw_debug;
+  g_imu_live_debug.gyro_x_raw = g_icm20948_gyro_x_raw_debug;
+  g_imu_live_debug.gyro_y_raw = g_icm20948_gyro_y_raw_debug;
+  g_imu_live_debug.gyro_z_raw = g_icm20948_gyro_z_raw_debug;
+  g_imu_live_debug.temp_raw = g_icm20948_temp_raw_debug;
+
+  g_imu_live_debug.accel_x_mps2 = g_icm20948_accel_x_mps2_debug;
+  g_imu_live_debug.accel_y_mps2 = g_icm20948_accel_y_mps2_debug;
+  g_imu_live_debug.accel_z_mps2 = g_icm20948_accel_z_mps2_debug;
+  g_imu_live_debug.gyro_x_radps = g_icm20948_gyro_x_radps_debug;
+  g_imu_live_debug.gyro_y_radps = g_icm20948_gyro_y_radps_debug;
+  g_imu_live_debug.gyro_z_radps = g_icm20948_gyro_z_radps_debug;
+  g_imu_live_debug.temp_c = g_icm20948_temp_c_debug;
+
+  g_icm20948_raw_ok = 1u;
+
+  if (g_ak09916_config_ok != 0u)
+  {
+    GOOSE_AK09916_ReadMagOnce();
+  }
+
+  g_imu_live_debug.mag_bypass_ok = (uint32_t)g_ak09916_bypass_ok;
+  g_imu_live_debug.mag_whoami_ok = (uint32_t)g_ak09916_whoami_ok;
+  g_imu_live_debug.mag_config_ok = (uint32_t)g_ak09916_config_ok;
+  g_imu_live_debug.mag_raw_ok = (uint32_t)g_ak09916_raw_ok;
+  g_imu_live_debug.mag_wia2 = g_ak09916_wia2_debug;
+  g_imu_live_debug.mag_st1 = g_ak09916_st1_debug;
+  g_imu_live_debug.mag_st2 = g_ak09916_st2_debug;
+
+  g_imu_live_debug.update_count++;
+  g_imu_live_debug.last_update_ms = HAL_GetTick();
+  g_imu_live_debug.last_error_stage = 0u;
 }
 
 static int32_t GOOSE_FloatToScaledInt32(float value, float scale)
@@ -451,6 +838,7 @@ int main(void)
   MX_UART5_Init();
   /* USER CODE BEGIN 2 */
 
+#if !GOOSE_I2C_DEBUG_ONLY
   const char *uart_boot =
       "\r\nOBC BOOT: UART5 PC12 telemetry active @ 115200 8N1\r\n";
 
@@ -458,6 +846,9 @@ int main(void)
                     (uint8_t *)uart_boot,
                     strlen(uart_boot),
                     100u);
+#endif
+
+  GOOSE_DebugImuI2cOnlyInit();
 
     /* USER CODE END 2 */
 
@@ -466,6 +857,12 @@ int main(void)
   while (1)
   {
     const uint32_t now_ms = HAL_GetTick();
+
+    if ((uint32_t)(now_ms - g_imu_live_last_read_ms) >= GOOSE_I2C_DEBUG_PERIOD_MS)
+    {
+      g_imu_live_last_read_ms = now_ms;
+      GOOSE_DebugImuI2cOnlyPoll();
+    }
 
     if ((g_ak09916_config_ok != 0u) &&
         ((uint32_t)(now_ms - g_ak09916_last_read_ms) >= 100u))
@@ -561,7 +958,8 @@ int main(void)
      *   100 ms = 10 Hz
      */
     
-    if ((uint32_t)(now_ms - g_imu_csv_last_ms) >= 100u)
+    if ((GOOSE_I2C_DEBUG_ONLY == 0u) &&
+        ((uint32_t)(now_ms - g_imu_csv_last_ms) >= 100u))
     {
       char msg[160];
 
@@ -644,7 +1042,8 @@ int main(void)
      *   - Euler angles/rates are scaled integers to avoid requiring float printf.
      *   - mag_x/y/z come from ADS estimator output in microtesla, scaled to nT.
      */
-    if ((uint32_t)(now_ms - g_est_csv_last_ms) >= 100u)
+    if ((GOOSE_I2C_DEBUG_ONLY == 0u) &&
+        ((uint32_t)(now_ms - g_est_csv_last_ms) >= 100u))
     {
       char msg[220];
       uint32_t rel_ms;
@@ -705,7 +1104,8 @@ int main(void)
      * Format:
      *   MAG,t_ms,sample,dt_ms,bypass,who,cfg,raw_ok,wia2,st1,st2,mx_raw,my_raw,mz_raw
      */
-    if ((uint32_t)(now_ms - g_mag_csv_last_ms) >= 100u)
+    if ((GOOSE_I2C_DEBUG_ONLY == 0u) &&
+        ((uint32_t)(now_ms - g_mag_csv_last_ms) >= 100u))
     {
       char msg[180];
 

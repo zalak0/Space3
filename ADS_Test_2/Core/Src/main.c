@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "icm20948.h"
+#include "ads_process.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,7 +45,11 @@
 I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
-ICM20948_Data imu_data;   /* ← This is what you'll watch in Live Expressions */
+ICM20948_Data imu_data;        /* Watch in Live Expressions */
+ADS_Process_Output ads_output;  /* QUEST + EKF packaged attitude output */
+ADS_EKF_State ads_ekf_state;    /* Convenience watch variable */
+Quaternion ads_q;               /* q_body_to_inertial */
+EulerAngles ads_euler;          /* roll/pitch/yaw in rad */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,13 +104,25 @@ int main(void)
       /* Hang here — check wiring / I2C address */
       while (1) { HAL_Delay(500); }
   }
+
+  ADS_Process_Config ads_config = ADS_Process_DefaultConfig();
+  ADS_Process_Init(&ads_config);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	ICM20948_Read(&hi2c2, &imu_data);
+	if (ICM20948_Read(&hi2c2, &imu_data))
+	{
+	  (void)ADS_Process_Update(&imu_data, &ads_output);
+
+	  /* Convenience aliases for debugger Live Expressions. */
+	  ads_ekf_state = ads_output.ekf_state;
+	  ads_q = ads_ekf_state.q_body_to_inertial;
+	  ads_euler = ads_output.euler_rad;
+	}
+
 	HAL_Delay(100);   /* 10 Hz update */
     /* USER CODE END WHILE */
 
