@@ -1,4 +1,4 @@
-#include "../../Hardware_chips/bms/bq76920_config.h"
+#include "hardware_chips/bms/bq76920_config.h"
 
 /* ============================================================
  * PRIVATE GPIO HELPERS

@@ -2,11 +2,11 @@
  * Compile:  gcc main_test.c aplqr.c -lm -o aplqr_test
  */
 
+#include <acs/acs_test.h>
+#include <acs/aplqr.h>
+#include <acs/pss.h>
 #include <stdio.h>
 #include <math.h>
-#include "pss.h"
-#include "aplqr.h"
-#include "acs_test.h"
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                             */
@@ -239,7 +239,7 @@ void test_orbital_convergence(void)
 /* Needs attitude propagation + field rotated into the TUMBLING body  */
 /* frame, else B-dot has no dB/dt to damp.                            */
 /* ------------------------------------------------------------------ */
-#include "bdot.h"
+#include <acs/bdot.h>
 
 static void bd_dcm(const float q[4], float R[3][3]){   /* inertial->body, q=[w x y z] */
     float w=q[0],x=q[1],y=q[2],z=q[3];

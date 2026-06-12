@@ -1,0 +1,2 @@
+../Core/App/hardware_chips/gps/gps_task.c:6:6:gps_task_init	1
+../Core/App/hardware_chips/gps/gps_task.c:11:6:gps_task	2

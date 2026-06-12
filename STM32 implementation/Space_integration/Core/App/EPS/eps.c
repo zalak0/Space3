@@ -1,8 +1,9 @@
-#include "main.h"
 #include "eps.h"
-
-#include "../Hardware_chips/bms/bq76920.h"
-#include "../Hardware_chips/charger/bq25798.h"
+#include "hardware_chips/charger/bq25798.h"
+#include "hardware_chips/charger/charger_manager.h"
+#include "hardware_chips/bms/bq76920.h"
+#include "common/fsw_ctx.h"
+#include "stm/modes.h"
 
 #define SOC_SAFE_ENTER          25.0f
 #define SOC_SAFE_EXIT           30.0f
@@ -16,240 +17,85 @@
 #define PACK_EMPTY_V            12.0f
 #define PACK_FULL_V             16.8f
 
-static void eps_disable_3v3_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_3V3_DISABLE_GPIO_Port, EPS_3V3_DISABLE_Pin, GPIO_PIN_SET);
-}
+void eps_init(fsw_ctx_t *ctx){
+    uint8_t part_info = 0;
+    uint8_t adc_cfg = 0xC0;
+    uint8_t reg15 = 0;
 
-static void eps_disable_5v_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_5V_DISABLE_GPIO_Port, EPS_5V_DISABLE_Pin, GPIO_PIN_SET);
-}
+    if (ctx == 0)
+        return;
 
-static void eps_disable_vbus_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_VBUS_DISABLE_GPIO_Port, EPS_VBUS_DISABLE_Pin, GPIO_PIN_SET);
-}
+    ctx->charger_present = 0U;
+    ctx->charger_configured = 0U;
+    ctx->eps_i2c_ok = 0U;
+    ctx->eps_telem_valid = 0U;
+    ctx->eps_telem_request = 0U;
 
-static void eps_enable_3v3_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_3V3_DISABLE_GPIO_Port, EPS_3V3_DISABLE_Pin, GPIO_PIN_RESET);
-}
-
-static void eps_enable_5v_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_5V_DISABLE_GPIO_Port, EPS_5V_DISABLE_Pin, GPIO_PIN_RESET);
-}
-
-static void eps_enable_vbus_rail(void)
-{
-    HAL_GPIO_WritePin(EPS_VBUS_DISABLE_GPIO_Port, EPS_VBUS_DISABLE_Pin, GPIO_PIN_RESET);
-}
-
-void eps_shed_nonessential(void)
-{
-    eps_disable_3v3_rail();
-    eps_disable_vbus_rail();
-    eps_disable_5v_rail();
-}
-
-void eps_nominal_rails(void)
-{
-    eps_enable_3v3_rail();
-    eps_enable_vbus_rail();
-    eps_enable_5v_rail();
-}
-
-void eps_enable_payload_rail(void)
-{
-    eps_nominal_rails();
-}
-
-static float eps_estimate_soc(float pack_voltage_v)
-{
-    float soc = ((pack_voltage_v - PACK_EMPTY_V) /
-                 (PACK_FULL_V - PACK_EMPTY_V)) * 100.0f;
-
-    if (soc < 0.0f) {
-        soc = 0.0f;
+    if (BQ25798_Read8(0x48, &part_info))
+    {
+        ctx->part_info = part_info;
+        ctx->charger_present = 1U;
+        ctx->eps_i2c_ok = 1U;
     }
-
-    if (soc > 100.0f) {
-        soc = 100.0f;
-    }
-
-    return soc;
-}
-
-static void eps_apply_individual_fault_shutdown(fsw_ctx_t *ctx)
-{
-    if (ctx->rail_3v3_flt || !ctx->rail_3v3_pg) {
-        eps_disable_3v3_rail();
-    }
-
-    if (ctx->rail_5v_flt || !ctx->rail_5v_pg) {
-        eps_disable_5v_rail();
-    }
-
-    if (ctx->vbus_flt || !ctx->vbus_pg) {
-        eps_disable_vbus_rail();
-    }
-}
-
-static void eps_apply_battery_limits(fsw_ctx_t *ctx)
-{
-    if (ctx->battery.cell_max_v >= CELL_HIGH_ENTER_V) {
-        ctx->battery_high = 1;
-        BQ25798_EnableChargerHardware(false);
-    } else if (ctx->battery.cell_max_v <= CELL_HIGH_EXIT_V) {
-        ctx->battery_high = 0;
-        BQ25798_EnableChargerHardware(true);
-    }
-
-    if (ctx->battery.cell_min_v <= CELL_LOW_ENTER_V) {
-        ctx->battery_low = 1;
-        ctx->soc_low = 1;
-        eps_shed_nonessential();
-    } else if (ctx->battery.cell_min_v >= CELL_LOW_EXIT_V) {
-        ctx->battery_low = 0;
-    }
-}
-
-bool eps_init(fsw_ctx_t *ctx)
-{
-    bool charger_ok;
-    bool battery_ok;
-
-    if (ctx == 0) {
-        return false;
-    }
-
-    ctx->charger_ok = 0;
-    ctx->battery_ok = 0;
-    ctx->eps_ok = 0;
-    ctx->eps_fault = 0;
-    ctx->soc_low = 0;
-    ctx->battery_low = 0;
-    ctx->battery_high = 0;
-
-    eps_shed_nonessential();
-
-    charger_ok = BQ25798_InitCharger4S();
-    battery_ok = BQ76920_Init();
-
-    ctx->charger_ok = charger_ok;
-    ctx->battery_ok = battery_ok;
-    ctx->eps_ok = charger_ok && battery_ok;
-    ctx->eps_fault = !ctx->eps_ok;
-
-    if (!ctx->eps_ok) {
-        ctx->soc_low = 1;
-        eps_shed_nonessential();
-        return false;
-    }
-
-    return true;
-}
-
-void eps_task(sat_mode_t mode, fsw_ctx_t *ctx)
-{
-    bool charger_ok;
-    bool battery_ok;
-
-    if (ctx == 0) {
+    else
+    {
+        ctx->eps_i2c_ok = 0U;
         return;
     }
 
-    BQ25798_ReadRailGPIOStatus(ctx);
-    eps_apply_individual_fault_shutdown(ctx);
+    if (ChargerManager_Init())
+        ctx->charger_configured = 1U;
+    else
+        ctx->charger_configured = 0U;
 
-    if (ctx->rail_3v3_flt ||
-        ctx->rail_5v_flt ||
-        ctx->vbus_flt) {
+    BQ25798_Write8(BQ25798_REG_ADC_CONTROL, adc_cfg);
 
-        ctx->eps_fault = 1;
-        ctx->eps_ok = 0;
+    if (BQ25798_Read8(0x15, &reg15))
+    {
+        reg15 |= (1U << 5);
+        BQ25798_Write8(0x15, reg15);
+    }
+}
+
+void eps_request_telemetry(fsw_ctx_t *ctx){
+    if (ctx == 0)
         return;
-    }
 
-    charger_ok = BQ25798_ReadTelemetry(&ctx->charger);
-    battery_ok = BQ76920_ReadTelemetry(&ctx->battery);
+    ctx->eps_telem_request = 1U;
+}
 
-    ctx->charger_ok = charger_ok;
-    ctx->battery_ok = battery_ok;
-    ctx->eps_ok = charger_ok && battery_ok;
+void eps_task(fsw_ctx_t *ctx){
+    BQ25798_Telemetry telem = {0};
 
-    if (!ctx->eps_ok) {
-        ctx->eps_fault = 1;
-        ctx->soc_low = 1;
-        eps_shed_nonessential();
+    if (ctx == 0)
         return;
-    }
 
-    ctx->pack_voltage_v = ctx->battery.pack_voltage_v;
-    ctx->vbat_v = ctx->charger.vbat_v;
-    ctx->vsys_v = ctx->charger.vsys_v;
-    ctx->ibat_a = ctx->charger.ibat_a;
-    ctx->soc_percent = eps_estimate_soc(ctx->battery.pack_voltage_v);
-
-    if (ctx->soc_percent < SOC_SAFE_ENTER) {
-        ctx->soc_low = 1;
-    } else if (ctx->soc_percent > SOC_SAFE_EXIT) {
-        ctx->soc_low = 0;
-    }
-
-    eps_apply_battery_limits(ctx);
-
-    if (ctx->battery.fault_ov ||
-        ctx->battery.fault_uv ||
-        ctx->battery.fault_ocd ||
-        ctx->battery.fault_scd ||
-        ctx->battery.fault_device_xready ||
-        ctx->charger.fault_status_0 ||
-        ctx->charger.fault_status_1) {
-
-        ctx->eps_fault = 1;
-        ctx->eps_ok = 0;
-
-        if (ctx->battery.fault_ov) {
-            ctx->battery_high = 1;
-            BQ25798_EnableChargerHardware(false);
-        }
-
-        if (ctx->battery.fault_uv ||
-            ctx->battery.fault_ocd ||
-            ctx->battery.fault_scd ||
-            ctx->battery.fault_device_xready) {
-
-            ctx->battery_low = 1;
-            ctx->soc_low = 1;
-            eps_shed_nonessential();
-        }
-
+    if (!ctx->eps_telem_request)
         return;
+
+    ctx->eps_telem_request = 0U;
+
+    if (BQ25798_ReadTelemetry(&telem))
+    {
+        ctx->vbus_v = telem.vbus_v;
+        ctx->vbat_v = telem.vbat_v;
+        ctx->vsys_v = telem.vsys_v;
+
+        ctx->ibus_a = telem.ibus_a;
+        ctx->ibat_a = telem.ibat_a;
+        ctx->eps_die_temp_c = telem.die_temp_c;
+
+        ctx->charger_status_0 = telem.charger_status_0;
+        ctx->charger_status_1 = telem.charger_status_1;
+        ctx->charger_pg = (telem.charger_status_0 & 0x08U) ? 1U : 0U;
+
+        ctx->eps_last_update_ms = HAL_GetTick();
+        ctx->eps_telem_valid = 1U;
+        ctx->eps_i2c_ok = 1U;
     }
-
-    ctx->eps_fault = 0;
-
-    switch (mode) {
-        case EPS_MODE_SAFE:
-            eps_shed_nonessential();
-            break;
-
-        case EPS_MODE_SCIENCE:
-            if (!ctx->soc_low && !ctx->battery_low && !ctx->eps_fault) {
-                eps_enable_payload_rail();
-            } else {
-                eps_shed_nonessential();
-            }
-            break;
-
-        default:
-            if (!ctx->soc_low && !ctx->battery_low && !ctx->eps_fault) {
-                eps_nominal_rails();
-            } else {
-                eps_shed_nonessential();
-            }
-            break;
+    else
+    {
+        ctx->eps_telem_valid = 0U;
+        ctx->eps_i2c_ok = 0U;
     }
 }

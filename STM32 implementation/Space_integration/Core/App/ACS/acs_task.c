@@ -1,12 +1,12 @@
-#include "adcs_types.h"
-#include "acs_task.h"
-#include "modes.h"
-#include "fsw_ctx.h"
+#include <acs/acs_task.h>
+#include <acs/adcs_types.h>
+#include <acs/aplqr.h>
+#include <acs/bdot.h>
+#include <hardware_chips/h-bridge/drv8833.h>
+#include "stm/modes.h"
+#include "common/fsw_ctx.h"
 
-#include "aplqr.h"
-#include "bdot.h"
 #include <stdint.h>
-#include "../Hardware_chips/h-bridge/drv8833.h"
 
 uint8_t dt_ctrl =  0.1f;
 

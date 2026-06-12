@@ -1,0 +1,10 @@
+../Core/App/hardware_chips/bms/bq76920.c:10:6:BQ76920_IsConnected	1
+../Core/App/hardware_chips/bms/bq76920.c:20:19:BQ76920_Read8	1
+../Core/App/hardware_chips/bms/bq76920.c:33:19:BQ76920_Write8	1
+../Core/App/hardware_chips/bms/bq76920.c:46:19:BQ76920_ReadBlock	1
+../Core/App/hardware_chips/bms/bq76920.c:94:6:BQ76920_EnableADC	2
+../Core/App/hardware_chips/bms/bq76920.c:106:6:BQ76920_Init	4
+../Core/App/hardware_chips/bms/bq76920.c:127:17:BQ76920_Combine14Bit	1
+../Core/App/hardware_chips/bms/bq76920.c:132:14:BQ76920_AdcToCellVoltage	1
+../Core/App/hardware_chips/bms/bq76920.c:148:6:BQ76920_ReadCellVoltage	4
+../Core/App/hardware_chips/bms/bq76920.c:179:6:BQ76920_ReadTelemetry	8

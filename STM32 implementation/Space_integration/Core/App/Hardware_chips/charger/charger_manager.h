@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#include "../../Hardware_chips/charger/bq25798.h"
+#include "hardware_chips/charger/bq25798.h"
 
 typedef struct
 {

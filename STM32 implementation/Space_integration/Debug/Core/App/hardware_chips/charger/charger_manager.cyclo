@@ -1,0 +1,5 @@
+../Core/App/hardware_chips/charger/charger_manager.c:27:30:ChargerManager_GetDefaultConfig	1
+../Core/App/hardware_chips/charger/charger_manager.c:32:6:ChargerManager_Init	2
+../Core/App/hardware_chips/charger/charger_manager.c:40:6:ChargerManager_ApplyConfig	11
+../Core/App/hardware_chips/charger/charger_manager.c:83:6:ChargerManager_ServiceWatchdog	1
+../Core/App/hardware_chips/charger/charger_manager.c:88:6:ChargerManager_ReadTelemetry	1

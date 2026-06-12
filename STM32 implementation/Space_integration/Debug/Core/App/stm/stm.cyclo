@@ -1,0 +1,3 @@
+../Core/App/stm/stm.c:5:14:rate_norm	1
+../Core/App/stm/stm.c:9:12:pointing_converged	3
+../Core/App/stm/stm.c:14:12:sm_update	25

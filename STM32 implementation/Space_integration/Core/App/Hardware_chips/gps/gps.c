@@ -1,6 +1,6 @@
+#include <hardware_chips/gps/gps.h>
 #include <stdio.h>
 #include <string.h>
-#include "gps.h"
 #include "stm32h7xx_hal.h"
 
 

@@ -1,0 +1,5 @@
+../Core/App/payload/langmuir.c:11:16:MCP3021_ReadRaw	32	static
+../Core/App/payload/langmuir.c:22:14:MCP3021_ReadVoltage	24	static
+../Core/App/payload/langmuir.c:29:14:ReadInternalADC	16	static
+../Core/App/payload/langmuir.c:41:6:langmuir_init	8	static
+../Core/App/payload/langmuir.c:47:6:langmuir_task	32	static

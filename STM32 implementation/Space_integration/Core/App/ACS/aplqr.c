@@ -1,6 +1,6 @@
 /* aplqr.c */
-#include "aplqr.h"
-#include "pss.h"
+#include <acs/aplqr.h>
+#include <acs/pss.h>
 #include <math.h>
 
 static const float Ix = 3.3333e-3f, Iy = 1.01793e-2f, Iz = 1.01793e-2f; /* your inertias */

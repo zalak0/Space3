@@ -1,0 +1,2 @@
+../Core/App/acs/bdot.c:8:6:bdot_init	16	static
+../Core/App/acs/bdot.c:14:6:bdot_step	72	static

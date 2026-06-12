@@ -1,0 +1,4 @@
+../Core/App/hardware_chips/h-bridge/drv8833.c:19:6:drv8833_init	16	static
+../Core/App/hardware_chips/h-bridge/drv8833.c:30:6:drv8833_set_axis	32	static
+../Core/App/hardware_chips/h-bridge/drv8833.c:47:6:drv8833_coast_all	16	static
+../Core/App/hardware_chips/h-bridge/drv8833.c:55:6:torquer_apply	32	static

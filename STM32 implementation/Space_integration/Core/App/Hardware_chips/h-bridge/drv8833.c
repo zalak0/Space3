@@ -1,6 +1,5 @@
 /* magnetorquer.c */
-#include "../../Hardware_chips/h-bridge/drv8833.h"
-
+#include <hardware_chips/h-bridge/drv8833.h>
 #include <math.h>
 
 /* Map each axis to its two PWM channels.
@@ -14,8 +13,8 @@ static const float duty_max[3] = { 0.5f, 0.5f, 0.5f };  /* set per axis from mea
 
 static mtq_bridge_t bridge[3] = {
     { &htim1, TIM_CHANNEL_1, TIM_CHANNEL_2 },  /* X */
-    { &htim1, TIM_CHANNEL_3, TIM_CHANNEL_4 },  /* Y */
-    { &htim8, TIM_CHANNEL_1, TIM_CHANNEL_2 },  /* Z */
+    { &htim8, TIM_CHANNEL_1, TIM_CHANNEL_2 },  /* Y */
+    { &htim8, TIM_CHANNEL_3, TIM_CHANNEL_4 },  /* Z */
 };
 void drv8833_init(void)
 {

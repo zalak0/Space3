@@ -1,5 +1,5 @@
-#include "gps_task.h"
-#include "gps.h"
+#include <hardware_chips/gps/gps.h>
+#include <hardware_chips/gps/gps_task.h>
 #include <stdio.h>
 #include <string.h>
 

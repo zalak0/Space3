@@ -1,0 +1,3 @@
+../Core/App/eps/eps.c:20:6:eps_init	5
+../Core/App/eps/eps.c:60:6:eps_request_telemetry	2
+../Core/App/eps/eps.c:67:6:eps_task	4

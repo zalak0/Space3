@@ -1,0 +1,12 @@
+../Core/App/hardware_chips/bms/bq76920_config.c:7:13:BQ76920_TS1_GPIO_Output	40	static
+../Core/App/hardware_chips/bms/bq76920_config.c:19:13:BQ76920_TS1_GPIO_HiZ	40	static
+../Core/App/hardware_chips/bms/bq76920_config.c:34:19:BQ76920_Boot_TS1	16	static
+../Core/App/hardware_chips/bms/bq76920_config.c:64:19:BQ76920_WriteReg	32	static
+../Core/App/hardware_chips/bms/bq76920_config.c:82:19:BQ76920_ReadReg	40	static
+../Core/App/hardware_chips/bms/bq76920_config.c:104:19:BQ76920_ReadWord14	48	static
+../Core/App/hardware_chips/bms/bq76920_config.c:138:19:BQ76920_ReadCalibration	24	static
+../Core/App/hardware_chips/bms/bq76920_config.c:182:19:BQ76920_ClearFaults	16	static
+../Core/App/hardware_chips/bms/bq76920_config.c:191:19:BQ76920_Init_MonitoringOnly	24	static
+../Core/App/hardware_chips/bms/bq76920_config.c:254:19:BQ76920_ReadCellRaw	32	static
+../Core/App/hardware_chips/bms/bq76920_config.c:298:19:BQ76920_ReadCellVoltage_mV	32	static
+../Core/App/hardware_chips/bms/bq76920_config.c:327:19:BQ76920_ReadAllCells_mV	24	static

@@ -1,4 +1,4 @@
-#include "bdot.h"
+#include <acs/bdot.h>
 #include <math.h>
 
 /* match your MATLAB: k_bdot = 2*omega_o*(1+sin(inc))*min(I) */

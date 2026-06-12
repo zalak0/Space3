@@ -1,6 +1,6 @@
 #ifndef BDOT_H
 #define BDOT_H
-#include "aplqr.h"   /* reuse adcs_dipole_t */
+#include <acs/aplqr.h>   /* reuse adcs_dipole_t */
 
 typedef struct {
     float B_prev[3];   /* last body-frame field sample [T] */

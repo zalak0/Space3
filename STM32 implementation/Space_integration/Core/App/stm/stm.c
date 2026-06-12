@@ -1,5 +1,5 @@
 #include "stm.h"
-#include "goose_config.h"
+#include "common/goose_config.h"
 #include <math.h>
 
 static float rate_norm(const adcs_state_t *x) {
@@ -33,7 +33,7 @@ sat_mode_t sm_update(const fsw_ctx_t *ctx, sat_mode_t mode) {
             	return MODE_DETUMBLE;
             }
 
-            if (ctx->ground_contact || sm_science_due()) {
+            if (ctx->ground_contact) {
             	return MODE_POINTING;
             }
 
@@ -46,10 +46,10 @@ sat_mode_t sm_update(const fsw_ctx_t *ctx, sat_mode_t mode) {
             break;
 
         case MODE_POINTING:
-            if (pointing_converged(&ctx->est) && sm_science_due()) {
+            if (pointing_converged(&ctx->est) && ctx -> science_due) {
             	return MODE_SCIENCE;
             }
-            if (ctx->ground_contact && sm_downlink_due()) {
+            if (ctx->ground_contact && ctx -> downlink_due) {
             	return MODE_DOWNLINK;
             }
             if (!ctx->science_due && !ctx->ground_contact) {
@@ -59,25 +59,25 @@ sat_mode_t sm_update(const fsw_ctx_t *ctx, sat_mode_t mode) {
             break;
 
         case MODE_SCIENCE:
-            if (!sm_science_due())  {
+            if (!ctx -> science_due)  {
             	return MODE_NOMINAL;
             }
-            if (ctx->ground_contact && sm_downlink_due()) {
+            if (ctx->ground_contact && ctx -> downlink_due) {
             	return MODE_DOWNLINK;
             }
             break;
 
         case MODE_DOWNLINK:
-            if (!ctx->ground_contact){
+            if (!ctx-> ground_contact){
             	return MODE_POINTING;
             }
-            if (sm_uplink_pending()){
+            if (ctx -> uplink_pending){
             	return MODE_UPLINK;
             }
             break;
 
         case MODE_UPLINK:
-            if (!ctx->ground_contact || sm_uplink_done()) {
+            if (ctx -> uplink_done) {
             	return MODE_NOMINAL;
             }
             break;

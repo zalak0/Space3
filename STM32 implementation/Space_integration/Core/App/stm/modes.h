@@ -3,6 +3,7 @@
 
 typedef enum {
     MODE_NOMINAL = 0,   /* power-on / deploy-inhibit; zero value = safe boot state */
+	MODE_BURN,
     MODE_DETUMBLE,
     MODE_SAFE,
     MODE_POINTING,

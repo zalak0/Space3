@@ -1,8 +1,8 @@
 #ifndef DRV8833_H
 #define DRV8833_H
 
+#include <acs/aplqr.h>         /* for adcs_dipole_t used by torquer_apply */
 #include "main.h"          /* brings in stm32f3xx_hal.h → TIM_HandleTypeDef, uint32_t, TIM_CHANNEL_x */
-#include "aplqr.h"         /* for adcs_dipole_t used by torquer_apply */
 
 typedef struct {
     TIM_HandleTypeDef *htim;

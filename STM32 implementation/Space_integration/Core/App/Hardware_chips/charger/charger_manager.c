@@ -1,4 +1,4 @@
-#include "../../Hardware_chips/charger/charger_manager.h"
+#include "hardware_chips/charger/charger_manager.h"
 
 static const ChargerManager_Config default_config =
 {
