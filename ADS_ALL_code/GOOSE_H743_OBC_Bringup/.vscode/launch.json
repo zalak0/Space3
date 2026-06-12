@@ -7,13 +7,14 @@
       "type": "cortex-debug",
       "request": "launch",
       "servertype": "stlink",
+      "serverpath": "C:/Users/sbush/AppData/Local/stm32cube/bundles/stlink-gdbserver/7.13.0+st.3/bin/ST-LINK_gdbserver.exe",
       "cwd": "${workspaceFolder}",
       "executable": "${workspaceFolder}/build/Debug/GOOSE_H743_OBC_Bringup.elf",
       "device": "STM32H743XIHx",
       "interface": "swd",
       "runToEntryPoint": "main",
       "gdbPath": "C:/Users/sbush/AppData/Local/stm32cube/bundles/gnu-tools-for-stm32/14.3.1+st.2/bin/arm-none-eabi-gdb.exe",
-      "showDevDebugOutput": "none"
+      "showDevDebugOutput": "raw"
     }
   ]
 }
