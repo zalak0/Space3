@@ -14,6 +14,9 @@ void payload_task(sat_mode_t mode, fsw_ctx_t *ctx,
     	case MODE_BURN:
 			burn_task();
         case MODE_SCIENCE:
+        	langmuir_init();
+        	GPS_init();
+
             langmuir_task(hi2c);
             gps_task(huart);
             break;
