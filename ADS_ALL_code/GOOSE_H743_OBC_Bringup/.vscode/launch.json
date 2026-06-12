@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+    
     {
       "name": "Debug STM32H743 via ST-Link",
       "type": "cortex-debug",
