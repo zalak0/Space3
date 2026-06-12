@@ -109,12 +109,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_UART5_Init();
   /* USER CODE BEGIN 2 */
-
-  QSPI_FlashInit();
-  HAL_Delay(10);          // let QSPI lines settle
-  printf("QSPI flash init OK\r\n");   // print here instead
-  uartRingBufferInitialise();
-
+  comms_init();
   fsw_ctx_t context = {
       .est       = {0},
       .B_lvlh    = {0, 0, 0},
@@ -153,7 +148,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 //	  printf("TEST CONNECTIONS\r\n");
+//	  HAL_Delay(100);
 	  comms_task(&mode, &context);
+//	  while (uartAvailable(&buffer_frame)) {
+//	          uint8_t b = uartReadByte(&buffer_frame);
+//	          HAL_UART_Transmit(&huart5, &b, 1, HAL_MAX_DELAY);
+//	      }
+//	  modeSetANYFUNCTION(&mode);
   }
   /* USER CODE END 3 */
 }

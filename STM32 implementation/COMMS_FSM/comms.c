@@ -42,7 +42,8 @@ uint8_t uartReadByte(RING_BUFFER *buffer) {
 
 // Redirect printf to USART2 debug port
 int __io_putchar(int ch) {
-    HAL_UART_Transmit(&huart5, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+	(void)ch;
     return ch;
 }
 
@@ -699,39 +700,33 @@ void updateMetaData(fsw_ctx_t *context) {
     }
 }
 
-// ================================================================
-// storeMeasurement
-// One float (4 bytes) written per 4 KB sector — same circular
-// buffer model as the F3 page-per-measurement scheme.
-// ================================================================
-void storeMeasurement(fsw_ctx_t *context, float value, int data_type) {
-    uint32_t *write_ptr, *read_ptr;
-    uint32_t  part_start, part_end;
 
-    if (data_type == PAYLOAD) {
-        write_ptr  = &context->payloadWritePtr;
-        read_ptr   = &context->payloadReadPtr;
-        part_start = PAYLOAD_START;
-        part_end   = PAYLOAD_END;
-    } else {
-        write_ptr  = &context->telemetryWritePtr;
-        read_ptr   = &context->telemetryReadPtr;
-        part_start = TELEMETRY_START;
-        part_end   = TELEMETRY_END;
-    }
+static MEASUREMENT_BLOCK payload_block   = {0};
+static MEASUREMENT_BLOCK telemetry_block = {0};
 
-    // Wrap write pointer at partition end
+static HAL_StatusTypeDef flush_block(fsw_ctx_t *context,
+                                     MEASUREMENT_BLOCK *blk,
+                                     uint32_t *write_ptr,
+                                     uint32_t *read_ptr,
+                                     uint32_t  part_start,
+                                     uint32_t  part_end) {
+    // Compute checksum
+    blk->checksum = 0;
+    for (uint32_t i = 0; i < blk->count; i++)
+        blk->checksum += blk->values[i];
+
+    // Wrap write pointer
     if (*write_ptr + W25Q_SECTOR_SIZE > part_end)
         *write_ptr = part_start;
 
     if (QSPI_EraseSector(*write_ptr) != HAL_OK) {
-        printf("Sector erase failed at 0x%08lX\r\n", *write_ptr); return;
+        printf("Sector erase failed at 0x%08lX\r\n", *write_ptr);
+        return HAL_ERROR;
     }
-
-    uint8_t buf[4];
-    memcpy(buf, &value, 4);
-    if (qspi_write_bytes(*write_ptr, buf, 4) != HAL_OK) {
-        printf("Write failed at 0x%08lX\r\n", *write_ptr); return;
+    if (qspi_write_bytes(*write_ptr, (uint8_t *)blk,
+                         sizeof(MEASUREMENT_BLOCK)) != HAL_OK) {
+        printf("Block write failed at 0x%08lX\r\n", *write_ptr);
+        return HAL_ERROR;
     }
 
     // Advance read pointer if write has lapped it
@@ -741,8 +736,61 @@ void storeMeasurement(fsw_ctx_t *context, float value, int data_type) {
     }
 
     *write_ptr += W25Q_SECTOR_SIZE;
-    context->totalWords += 1;
+    context->totalWords += blk->count;
     updateMetaData(context);
+
+    // Clear the RAM buffer
+    memset(blk, 0, sizeof(MEASUREMENT_BLOCK));
+    return HAL_OK;
+}
+
+
+bool readMeasurementBlock(uint32_t addr, MEASUREMENT_BLOCK *block) {
+    if (QSPI_Read(addr, (uint8_t *)block,
+                  sizeof(MEASUREMENT_BLOCK)) != HAL_OK) {
+        printf("Block read failed at 0x%08lX\r\n", addr);
+        return false;
+    }
+    // Verify checksum
+    uint32_t check = 0;
+    for (uint32_t i = 0; i < block->count; i++)
+        check += block->values[i];
+    if (check != block->checksum) {
+        printf("Block checksum mismatch at 0x%08lX\r\n", addr);
+        return false;
+    }
+    return true;
+}
+
+
+// ================================================================
+// storeMeasurement
+// One float (4 bytes) written per 4 KB sector — same circular
+// buffer model as the F3 page-per-measurement scheme.
+// ================================================================
+void storeMeasurement(fsw_ctx_t *context, uint32_t value, int data_type) {
+    MEASUREMENT_BLOCK *blk;
+    uint32_t *write_ptr, *read_ptr;
+    uint32_t  part_start, part_end;
+
+    if (data_type == PAYLOAD) {
+        blk        = &payload_block;
+        write_ptr  = &context->payloadWritePtr;
+        read_ptr   = &context->payloadReadPtr;
+        part_start = PAYLOAD_START;
+        part_end   = PAYLOAD_END;
+    } else {
+        blk        = &telemetry_block;
+        write_ptr  = &context->telemetryWritePtr;
+        read_ptr   = &context->telemetryReadPtr;
+        part_start = TELEMETRY_START;
+        part_end   = TELEMETRY_END;
+    }
+
+    blk->values[blk->count++] = value;
+
+    if (blk->count >= MEASUREMENTS_PER_BLOCK)
+        flush_block(context, blk, write_ptr, read_ptr, part_start, part_end);
 }
 
 // ================================================================
@@ -881,30 +929,36 @@ void printFlash(void) {
 void writeDummyData(void) {
     uint32_t counter = 0;
 
-    for (uint32_t addr = PAYLOAD_START; addr < PAYLOAD_END;
-         addr += W25Q_SECTOR_SIZE) {
-        if (QSPI_EraseSector(addr) != HAL_OK) {
-            printf("Dummy erase fail at 0x%08lX\r\n", addr); return;
-        }
-        uint8_t buf[4];
-        memcpy(buf, &counter, 4);
-        if (qspi_write_bytes(addr, buf, 4) != HAL_OK) {
-            printf("Dummy write fail\r\n"); return;
-        }
-        counter = (counter + 1) % 10;
-    }
+    uint32_t partitions[2][2] = {
+        { PAYLOAD_START,   PAYLOAD_END   },
+        { TELEMETRY_START, TELEMETRY_END }
+    };
 
-    for (uint32_t addr = TELEMETRY_START; addr < TELEMETRY_END;
-         addr += W25Q_SECTOR_SIZE) {
-        if (QSPI_EraseSector(addr) != HAL_OK) {
-            printf("Dummy erase fail at 0x%08lX\r\n", addr); return;
+    for (int p = 0; p < 2; p++) {
+        uint32_t start = partitions[p][0];
+        uint32_t end   = partitions[p][1];
+
+        for (uint32_t addr = start; addr < end; addr += W25Q_SECTOR_SIZE) {
+            MEASUREMENT_BLOCK blk;
+            memset(&blk, 0, sizeof(blk));
+            blk.count = MEASUREMENTS_PER_BLOCK;
+
+            for (uint32_t i = 0; i < MEASUREMENTS_PER_BLOCK; i++) {
+                blk.values[i] = counter;
+                blk.checksum += counter;
+                counter = (counter + 1) % 10;
+            }
+
+            if (QSPI_EraseSector(addr) != HAL_OK) {
+                printf("Dummy erase fail at 0x%08lX\r\n", addr);
+                return;
+            }
+            if (qspi_write_bytes(addr, (uint8_t *)&blk,
+                                 sizeof(MEASUREMENT_BLOCK)) != HAL_OK) {
+                printf("Dummy write fail at 0x%08lX\r\n", addr);
+                return;
+            }
         }
-        uint8_t buf[4];
-        memcpy(buf, &counter, 4);
-        if (qspi_write_bytes(addr, buf, 4) != HAL_OK) {
-            printf("Dummy write fail\r\n"); return;
-        }
-        counter = (counter + 1) % 10;
     }
 
     printf("Dummy data written\r\n");
@@ -987,13 +1041,22 @@ void  modeSetANYFUNCTION(sat_mode_t *mode) {
 		reset_frame_store();
 	}
 }
+
+// send message
+static void sendStatus(const char *msg, int packet_id) {
+    printf("%s\r\n", msg);                 // keep local debug
+    AX25Packaging((uint8_t*)msg, strlen(msg), packet_id, BUFFER_SIZE);
+}
+
+
+
+
+
 // ================================================================
 // comms_task
 // ================================================================
 void comms_task(sat_mode_t *mode, fsw_ctx_t *context) {
-
-
-	switch (mode) {
+	switch (*mode) {
 	case MODE_UPLINK:
 		if (uartAvailable(&buffer_frame)) {
 		        uint8_t frame_buffer[360];
@@ -1020,19 +1083,20 @@ void comms_task(sat_mode_t *mode, fsw_ctx_t *context) {
 
 		        if (packet_id_received == CLEAR) {
 		            eraseAllStorage(context);
-		            printf("Cleared Memory\r\n");
+		            sendStatus("Cleared Memory", TELEMETRY);
 
 		        } else if (packet_id_received == TELEMETRY ||
 		                   packet_id_received == PAYLOAD) {
-		            printf("Sending downlink\r\n");
+		        	sendStatus("Sending downlink", TELEMETRY);
 		            downlinkDataAllMemory(context, packet_id_received);
 
 		        } else if (packet_id_received == MEMORY) {
 		            printFlash();
-		            printf("Sent all of memory\r\n");
+		            sendStatus("Sent all of memory", TELEMETRY);
 
 		        } else if (packet_id_received == DUMMYDATA) {
 		            writeDummyData();
+		            sendStatus("Dummy data written", TELEMETRY);
 
 		        } else if (packet_id_received == MODEGET) {
 		            modeGet(mode);
@@ -1045,13 +1109,15 @@ void comms_task(sat_mode_t *mode, fsw_ctx_t *context) {
 		        all_messages_received =  0;
 		        reset_frame_store();
 		    }
+		    break;
 	default:
+		modeSetANYFUNCTION(mode);
 		break;
 	}
 }
 
 void comms_init(void) {
-	QSPI_FlashInit();
+//	QSPI_FlashInit();
 	HAL_Delay(10);          // let QSPI lines settle
 	printf("QSPI flash init OK\r\n");   // print here instead
 	uartRingBufferInitialise();

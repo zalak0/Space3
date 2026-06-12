@@ -16,6 +16,7 @@
 extern CRC_HandleTypeDef   hcrc;
 extern UART_HandleTypeDef  huart5;   // RF link to ESP32  (PA9/PA10)
 extern UART_HandleTypeDef  huart2;   // Debug printf      (PA2/PA3)
+extern UART_HandleTypeDef  huart1;
 extern QSPI_HandleTypeDef  hqspi;    // W25Q256 NOR flash (Bank 1)
 
 // ================================================================
@@ -132,16 +133,27 @@ static const uint8_t SOURCE_ADDRESS[7] = {
 // The 40 KB gaps prevent cross-partition wear propagation.
 // ================================================================
 #define PAYLOAD_START          0x00010000UL
-#define PAYLOAD_END            0x00190000UL   // exclusive
-#define PAYLOAD_SECTOR_COUNT   336UL
+#define PAYLOAD_END            0x00050000UL   // exclusive — 64 sectors (256 KB)
+#define PAYLOAD_SECTOR_COUNT   64UL
 
-#define TELEMETRY_START        0x0019A000UL
-#define TELEMETRY_END          0x00320000UL   // exclusive
-#define TELEMETRY_SECTOR_COUNT 390UL
+#define TELEMETRY_START        0x00050000UL
+#define TELEMETRY_END          0x00090000UL   // exclusive — 64 sectors (256 KB)
+#define TELEMETRY_SECTOR_COUNT 64UL
 
-#define META_SECTOR_ADDR       0x00CCC000UL
+#define META_SECTOR_ADDR       0x00090000UL
 
 #define MAGIC_NUMBER           0xDEADBEEF
+
+
+#define MEASUREMENTS_PER_BLOCK  300
+
+typedef struct {
+    uint32_t values[MEASUREMENTS_PER_BLOCK];
+    uint32_t count;    // how many values are valid (0–300)
+    uint32_t checksum; // simple sum of values[0..count-1]
+} MEASUREMENT_BLOCK;  // 1208 bytes total
+
+
 
 // ================================================================
 // Structs / enums
@@ -249,7 +261,7 @@ HAL_StatusTypeDef QSPI_Read(uint32_t addr, uint8_t *data, uint32_t size);
 void onStartup(fsw_ctx_t *context);
 void updateMetaData(fsw_ctx_t *context);
 void restoreContext(fsw_ctx_t *context);
-void storeMeasurement(fsw_ctx_t *context, float value, int data_type);
+void storeMeasurement(fsw_ctx_t *context, uint32_t value, int data_type);
 void downlinkDataAllMemory(fsw_ctx_t *context, int packet_id);
 void eraseAllStorage(fsw_ctx_t *context);
 void printFlash(void);
@@ -264,7 +276,6 @@ void comms_task(sat_mode_t *mode, fsw_ctx_t *context);
 
 // Initialise comms
 void comms_init(void);
-
 
 // Let you change mdoe so you can place into another other state. also lets you retrieve but could be okay
 void  modeSetANYFUNCTION(sat_mode_t *mode);
