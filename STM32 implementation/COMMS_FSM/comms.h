@@ -262,4 +262,10 @@ void modeGet(sat_mode_t *mode);
 // --- Top-level task ---
 void comms_task(sat_mode_t *mode, fsw_ctx_t *context);
 
+// Initialise comms
+void comms_init(void);
+
+
+// Let you change mdoe so you can place into another other state. also lets you retrieve but could be okay
+void  modeSetANYFUNCTION(sat_mode_t *mode);
 #endif // COMMS_H

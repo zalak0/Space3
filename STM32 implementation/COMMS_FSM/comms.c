@@ -953,6 +953,40 @@ void modeGet(sat_mode_t *mode) {
     AX25Packaging((uint8_t *)name, strlen(name), MODEGET, BUFFER_SIZE);
 }
 
+
+// Used in any state so palce it at the top so you can change modes
+void  modeSetANYFUNCTION(sat_mode_t *mode) {
+	if (uartAvailable(&buffer_frame)) {
+			        uint8_t frame_buffer[360];
+			        int     frame_len = collectAX25Frame(frame_buffer, 360);
+			        if (frame_len <= 0) return;
+
+			        uint8_t  pid = frame_buffer[17];
+			        uint16_t fn  = ((uint16_t)frame_buffer[18] << 8) | frame_buffer[19];
+			        uint16_t tf  = ((uint16_t)frame_buffer[20] << 8) | frame_buffer[21];
+
+			        if (pid == ACK || pid == NACK) return;
+
+			        if (AX25ValidityCheck(frame_buffer, buffer_size, frame_len)) {
+			            sendACK(fn, tf);
+			            packet_id_received = storeFrame(frame_buffer, frame_len);
+			            if (allFramesReceived())
+			                all_messages_received = reassemble();
+			        } else {
+			            sendNACK(fn, tf);
+			        }
+			    }
+	if (all_messages_received == 1) {
+		if (packet_id_received == MODEGET) {
+			modeGet(mode);
+		} else if (packet_id_received == MODESET) {
+			modeSet(mode);
+		}
+		packet_id_received    = -1;
+		all_messages_received =  0;
+		reset_frame_store();
+	}
+}
 // ================================================================
 // comms_task
 // ================================================================
@@ -1016,6 +1050,13 @@ void comms_task(sat_mode_t *mode, fsw_ctx_t *context) {
 	}
 }
 
+void comms_init(void) {
+	QSPI_FlashInit();
+	HAL_Delay(10);          // let QSPI lines settle
+	printf("QSPI flash init OK\r\n");   // print here instead
+	uartRingBufferInitialise();
+
+}
 
 //if (uartAvailable(&buffer_frame)) {
 //        uint8_t frame_buffer[360];
