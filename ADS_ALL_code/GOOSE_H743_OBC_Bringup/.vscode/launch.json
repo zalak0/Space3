@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug STM32H743 via ST-Link",
+      "type": "cortex-debug",
+      "request": "launch",
+      "servertype": "stlink",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/Debug/GOOSE_H743_OBC_Bringup.elf",
+      "device": "STM32H743XIHx",
+      "interface": "swd",
+      "runToEntryPoint": "main",
+      "gdbPath": "C:/Users/sbush/AppData/Local/stm32cube/bundles/gnu-tools-for-stm32/14.3.1+st.2/bin/arm-none-eabi-gdb.exe",
+      "showDevDebugOutput": "none"
+    }
+  ]
+}
