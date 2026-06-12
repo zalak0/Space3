@@ -1,0 +1,7 @@
+../Core/Src/icm20948.c:18:13:reg_write	1
+../Core/Src/icm20948.c:28:13:reg_read	2
+../Core/Src/icm20948.c:40:13:select_bank	1
+../Core/Src/icm20948.c:49:13:mag_write	1
+../Core/Src/icm20948.c:54:13:mag_read	1
+../Core/Src/icm20948.c:64:6:ICM20948_Init	7
+../Core/Src/icm20948.c:144:6:ICM20948_Read	7
